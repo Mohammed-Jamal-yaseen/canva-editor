@@ -1,0 +1,136 @@
+@import "tailwindcss";
+@plugin "tailwindcss-animate";
+
+@custom-variant dark (&:is(.dark *));
+
+@theme inline {
+  /* Fonts */
+  --font-sans: var(--font-ibm-plex-arabic), system-ui, sans-serif;
+  --font-mono: var(--font-ibm-plex-mono), ui-monospace, SFMono-Regular, monospace;
+
+  /* Geometry - Refined, not too round */
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+
+  /* Colors */
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+}
+
+:root {
+  --radius: 0.5rem;
+  /* Expert look: subtle, not circular */
+
+  /* Light Mode - Professional Slate/Gray Scale */
+  --background: oklch(1 0 0);
+  --foreground: oklch(0.129 0.012 284.692);
+  --card: oklch(1 0 0);
+  --card-foreground: oklch(0.129 0.012 284.692);
+  --primary: oklch(0.208 0.012 285.805);
+  --primary-foreground: oklch(0.984 0.003 247.858);
+  --secondary: oklch(0.961 0.004 285.975);
+  --secondary-foreground: oklch(0.208 0.012 285.805);
+  --muted: oklch(0.961 0.004 285.975);
+  --muted-foreground: oklch(0.451 0.012 285.805);
+  --accent: oklch(0.961 0.004 285.975);
+  --accent-foreground: oklch(0.208 0.012 285.805);
+  --destructive: oklch(0.577 0.245 27.325);
+  --border: oklch(0.922 0.004 285.805);
+  --input: oklch(0.922 0.004 285.805);
+  --ring: oklch(0.208 0.012 285.805);
+}
+
+.dark {
+  /* Dark Mode - Deep Charcoal (better than pure black) */
+  --background: oklch(0.129 0.012 284.692);
+  --foreground: oklch(0.984 0.003 247.858);
+  --card: oklch(0.15 0.012 284.692);
+  --card-foreground: oklch(0.984 0.003 247.858);
+  --primary: oklch(0.984 0.003 247.858);
+  --primary-foreground: oklch(0.129 0.012 284.692);
+  --secondary: oklch(0.208 0.012 285.805);
+  --secondary-foreground: oklch(0.984 0.003 247.858);
+  --muted: oklch(0.208 0.012 285.805);
+  --muted-foreground: oklch(0.704 0.012 285.805);
+  --accent: oklch(0.208 0.012 285.805);
+  --accent-foreground: oklch(0.984 0.003 247.858);
+  --border: oklch(0.208 0.012 285.805);
+  --input: oklch(0.208 0.012 285.805);
+  --ring: oklch(0.8 0.012 285.805);
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+    /* Hide scrollbars globally */
+    -ms-overflow-style: none;
+    /* IE and Edge */
+    scrollbar-width: none;
+    /* Firefox */
+  }
+
+  *::-webkit-scrollbar {
+    display: none;
+    /* Chrome, Safari and Opera */
+  }
+
+  body {
+    @apply bg-background text-foreground font-sans antialiased;
+    font-feature-settings: "cv11", "ss01", "ss03";
+  }
+
+  /* Expert Fluid Typography - Scales automatically */
+  h1 {
+    @apply text-3xl font-bold tracking-tight sm:text-4xl md:text-5xl lg:text-6xl;
+  }
+
+  h2 {
+    @apply text-2xl font-semibold tracking-tight sm:text-3xl md:text-4xl;
+  }
+
+  h3 {
+    @apply text-xl font-semibold tracking-tight sm:text-2xl;
+  }
+
+  p {
+    @apply leading-relaxed text-muted-foreground sm:text-lg;
+  }
+}
+
+@layer utilities {
+
+  /* The "Smart Container" for all devices */
+  .app-container {
+    @apply mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8;
+  }
+
+  /* Modern Expert Effects */
+  .glass {
+    @apply bg-background/70 backdrop-blur-md border border-border/50 shadow-sm;
+  }
+
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+
+  .no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+}
