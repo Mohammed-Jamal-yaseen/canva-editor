@@ -126,7 +126,8 @@ export type ActiveTool =
   | "remove-bg"
   | "templates"
   | "emoji"
-  | "icon";
+  | "icon"
+  | "hand";
 
 export const FILL_COLOR = "rgba(0,0,0,1)";
 export const STROKE_COLOR = "rgba(0,0,0,1)";
@@ -191,6 +192,7 @@ export interface EditorHookProps {
   defaultState?: string;
   defaultWidth?: number;
   defaultHeight?: number;
+  activeTool: ActiveTool;
   clearSelectionCallback?: () => void;
   saveCallback?: (values: {
     json: string;

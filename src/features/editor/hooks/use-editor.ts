@@ -173,7 +173,7 @@ const buildEditor = ({
       const center = canvas.getVpCenter();
       canvas.zoomToPoint(
         new fabric.Point(center.x, center.y),
-        zoomRatio > 1 ? 1 : zoomRatio
+        zoomRatio > 10 ? 10 : zoomRatio
       );
     },
     zoomOut: () => {
@@ -182,7 +182,7 @@ const buildEditor = ({
       const center = canvas.getVpCenter();
       canvas.zoomToPoint(
         new fabric.Point(center.x, center.y),
-        zoomRatio < 0.2 ? 0.2 : zoomRatio,
+        zoomRatio < 0.1 ? 0.1 : zoomRatio,
       );
     },
     changeSize: (value: { width: number; height: number }) => {
@@ -717,32 +717,76 @@ const buildEditor = ({
 
       if (!activeObject || !workspace) return;
 
+      const workspaceWidth = workspace.width! * workspace.scaleX!;
+      const workspaceHeight = workspace.height! * workspace.scaleY!;
+      const workspaceLeft = workspace.left!;
+      const workspaceTop = workspace.top!;
+
       if (position === "left") {
-        activeObject.set({ left: 0 });
+        activeObject.set({ left: workspaceLeft });
       }
 
       if (position === "right") {
-        activeObject.set({ left: workspace.width - activeObject.width! * activeObject.scaleX! });
+        activeObject.set({ left: workspaceLeft + workspaceWidth - activeObject.width! * activeObject.scaleX! });
       }
 
       if (position === "center") {
-        activeObject.set({ left: (workspace.width - activeObject.width! * activeObject.scaleX!) / 2 });
+        activeObject.set({ left: workspaceLeft + (workspaceWidth - activeObject.width! * activeObject.scaleX!) / 2 });
       }
 
       if (position === "top") {
-        activeObject.set({ top: 0 });
+        activeObject.set({ top: workspaceTop });
       }
 
       if (position === "bottom") {
-        activeObject.set({ top: workspace.height - activeObject.height! * activeObject.scaleY! });
+        activeObject.set({ top: workspaceTop + workspaceHeight - activeObject.height! * activeObject.scaleY! });
       }
 
       if (position === "middle") {
-        activeObject.set({ top: (workspace.height - activeObject.height! * activeObject.scaleY!) / 2 });
+        activeObject.set({ top: workspaceTop + (workspaceHeight - activeObject.height! * activeObject.scaleY!) / 2 });
       }
-      
-      // TODO: Distribute horizontal/vertical logic if multiple objects selected
-      // For now this aligns single/grouped objects to canvas
+
+      if (position === "distribute-horizontal" && activeObject.type === "activeSelection") {
+        const selection = activeObject as fabric.ActiveSelection;
+        const objects = selection.getObjects().sort((a, b) => a.left - b.left);
+        
+        if (objects.length > 2) {
+          const first = objects[0];
+          const last = objects[objects.length - 1];
+          const totalSpace = (last.left + last.width! * last.scaleX!) - first.left;
+          const totalObjectsWidth = objects.reduce((sum, obj) => sum + obj.width! * obj.scaleX!, 0);
+          const gap = (totalSpace - totalObjectsWidth) / (objects.length - 1);
+          
+          let currentLeft = first.left;
+          objects.forEach((obj, index) => {
+            if (index > 0 && index < objects.length - 1) {
+              obj.set({ left: currentLeft });
+            }
+            currentLeft += obj.width! * obj.scaleX! + gap;
+          });
+        }
+      }
+
+      if (position === "distribute-vertical" && activeObject.type === "activeSelection") {
+        const selection = activeObject as fabric.ActiveSelection;
+        const objects = selection.getObjects().sort((a, b) => a.top - b.top);
+        
+        if (objects.length > 2) {
+           const first = objects[0];
+           const last = objects[objects.length - 1];
+           const totalSpace = (last.top + last.height! * last.scaleY!) - first.top;
+           const totalObjectsHeight = objects.reduce((sum, obj) => sum + obj.height! * obj.scaleY!, 0);
+           const gap = (totalSpace - totalObjectsHeight) / (objects.length - 1);
+           
+           let currentTop = first.top;
+           objects.forEach((obj, index) => {
+             if (index > 0 && index < objects.length - 1) {
+               obj.set({ top: currentTop });
+             }
+             currentTop += obj.height! * obj.scaleY! + gap;
+           });
+        }
+      }
 
       canvas.renderAll();
       save();
@@ -754,6 +798,7 @@ export const useEditor = ({
   defaultState,
   defaultHeight,
   defaultWidth,
+  activeTool,
   clearSelectionCallback,
   saveCallback,
 }: EditorHookProps) => {
@@ -796,6 +841,7 @@ export const useEditor = ({
   useCanvasEvents({
     save,
     canvas,
+    activeTool,
     setSelectedObjects,
     clearSelectionCallback,
   });

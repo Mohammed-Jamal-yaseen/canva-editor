@@ -6,8 +6,8 @@ export const useGetSubscription = () => {
     queryFn: async () => {
       // Mock subscription for now as Hono backend is removed
       return {
-        active: false,
-        planId: "free",
+        active: true,
+        planId: "pro",
         customerId: "mock_customer_id",
       };
     },

@@ -10,7 +10,8 @@ import {
   Type,
   LayoutGrid,
   Smile,
-  Sticker
+  Sticker,
+  Grab
 } from "lucide-react";
 
 import { ActiveTool } from "@/features/editor/types";
@@ -75,6 +76,12 @@ export const Sidebar = ({
           label="Icons"
           isActive={activeTool === "icon"}
           onClick={() => onChangeActiveTool("icon")}
+        />
+        <SidebarItem
+          icon={Grab}
+          label="Hand"
+          isActive={activeTool === "hand"}
+          onClick={() => onChangeActiveTool("hand")}
         />
       </ul>
       <div className="flex flex-col lg:block ml-auto lg:ml-0 lg:mt-auto border-l lg:border-l-0 lg:border-t border-gray-100 px-2 lg:px-0 bg-white">

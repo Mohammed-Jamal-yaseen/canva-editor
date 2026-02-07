@@ -1,9 +1,11 @@
 import * as fabric from "fabric";
 import { useEffect } from "react";
+import { ActiveTool } from "@/features/editor/types";
 
 interface UseCanvasEventsProps {
   save: () => void;
   canvas: fabric.Canvas | null;
+  activeTool: ActiveTool;
   setSelectedObjects: (objects: fabric.Object[]) => void;
   clearSelectionCallback?: () => void;
 };
@@ -11,6 +13,7 @@ interface UseCanvasEventsProps {
 export const useCanvasEvents = ({
   save,
   canvas,
+  activeTool,
   setSelectedObjects,
   clearSelectionCallback,
 }: UseCanvasEventsProps) => {
@@ -29,6 +32,50 @@ export const useCanvasEvents = ({
         setSelectedObjects([]);
         clearSelectionCallback?.();
       });
+
+      canvas.on("mouse:wheel", (opt) => {
+        const delta = opt.e.deltaY;
+        let zoom = canvas.getZoom();
+        zoom *= 0.999 ** delta;
+        if (zoom > 20) zoom = 20;
+        if (zoom < 0.01) zoom = 0.01;
+        canvas.zoomToPoint(new fabric.Point(opt.e.offsetX, opt.e.offsetY), zoom);
+        opt.e.preventDefault();
+        opt.e.stopPropagation();
+      });
+
+      canvas.on("mouse:down", (opt) => {
+        const evt = opt.e as any;
+        if (evt.altKey === true || evt.button === 1 || activeTool === "hand") {
+          (canvas as any).isDragging = true;
+          canvas.selection = false;
+          (canvas as any).lastPosX = evt.clientX;
+          (canvas as any).lastPosY = evt.clientY;
+          canvas.defaultCursor = "grabbing";
+          canvas.setCursor("grabbing");
+        }
+      });
+
+      canvas.on("mouse:move", (opt) => {
+        if ((canvas as any).isDragging) {
+          const e = opt.e as any;
+          const vpt = canvas.viewportTransform;
+          vpt[4] += e.clientX - (canvas as any).lastPosX;
+          vpt[5] += e.clientY - (canvas as any).lastPosY;
+          canvas.requestRenderAll();
+          (canvas as any).lastPosX = e.clientX;
+          (canvas as any).lastPosY = e.clientY;
+          canvas.setCursor("grabbing");
+        }
+      });
+
+      canvas.on("mouse:up", () => {
+        canvas.setViewportTransform(canvas.viewportTransform);
+        (canvas as any).isDragging = false;
+        canvas.selection = true;
+        canvas.defaultCursor = activeTool === "hand" ? "grab" : "default";
+        canvas.setCursor(activeTool === "hand" ? "grab" : "default");
+      });
     }
 
     return () => {
@@ -39,12 +86,17 @@ export const useCanvasEvents = ({
         canvas.off("selection:created");
         canvas.off("selection:updated");
         canvas.off("selection:cleared");
+        canvas.off("mouse:wheel");
+        canvas.off("mouse:down");
+        canvas.off("mouse:move");
+        canvas.off("mouse:up");
       }
     };
   },
   [
     save,
     canvas,
+    activeTool,
     clearSelectionCallback,
     setSelectedObjects
   ]);

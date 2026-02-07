@@ -1,31 +1,19 @@
-import { toast } from "sonner";
 import { useMutation } from "@tanstack/react-query";
-import { InferResponseType } from "hono";
-
-import { client } from "@/lib/hono";
-
-type ResponseType = InferResponseType<typeof client.api.subscriptions.checkout["$post"], 200>;
+import { toast } from "sonner";
 
 export const useCheckout = () => {
-  const mutation = useMutation<
-    ResponseType,
-    Error
-  >({
+  const mutation = useMutation({
     mutationFn: async () => {
-      const response = await client.api.subscriptions.checkout.$post();
-
-      if (!response.ok) {
-        throw new Error("Failed to create session");
-      }
-
-      return await response.json();
+      // Mock checkout
+      console.log("Checkout triggered");
+      return { url: "#" };
     },
-    onSuccess: ({ data }) => {
-      window.location.href = data;
+    onSuccess: () => {
+      toast.success("Checkout simulation successful");
     },
     onError: () => {
-      toast.error("Failed to create session");
-    },
+      toast.error("Failed to trigger checkout");
+    }
   });
 
   return mutation;

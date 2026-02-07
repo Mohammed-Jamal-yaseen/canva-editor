@@ -18,7 +18,11 @@ import {
   AlignRight,
   Trash,
   SquareSplitHorizontal,
-  Copy
+  Copy,
+  AlignVerticalJustifyCenter,
+  AlignVerticalJustifyEnd,
+  AlignVerticalJustifyStart,
+  LayoutGrid
 } from "lucide-react";
 
 import { isTextType } from "@/features/editor/utils";
@@ -474,6 +478,46 @@ export const Toolbar = ({
            </Button>
         </Hint>
       </div>
+      <div className="flex items-center h-full justify-center">
+        <Hint label="Align Top" side="bottom" sideOffset={5}>
+           <Button onClick={() => editor?.align("top")} size="icon" variant="ghost">
+             <AlignVerticalJustifyStart className="size-4" />
+           </Button>
+        </Hint>
+      </div>
+      <div className="flex items-center h-full justify-center">
+        <Hint label="Align Middle" side="bottom" sideOffset={5}>
+           <Button onClick={() => editor?.align("middle")} size="icon" variant="ghost">
+             <AlignVerticalJustifyCenter className="size-4" />
+           </Button>
+        </Hint>
+      </div>
+      <div className="flex items-center h-full justify-center">
+        <Hint label="Align Bottom" side="bottom" sideOffset={5}>
+           <Button onClick={() => editor?.align("bottom")} size="icon" variant="ghost">
+             <AlignVerticalJustifyEnd className="size-4" />
+           </Button>
+        </Hint>
+      </div>
+
+      {editor?.selectedObjects && editor.selectedObjects.length > 2 && (
+        <>
+            <div className="flex items-center h-full justify-center">
+                <Hint label="Distribute Horizontal" side="bottom" sideOffset={5}>
+                <Button onClick={() => editor?.align("distribute-horizontal")} size="icon" variant="ghost">
+                    <AlignLeft className="size-4 rotate-90" />
+                </Button>
+                </Hint>
+            </div>
+            <div className="flex items-center h-full justify-center">
+                <Hint label="Distribute Vertical" side="bottom" sideOffset={5}>
+                <Button onClick={() => editor?.align("distribute-vertical")} size="icon" variant="ghost">
+                    <AlignLeft className="size-4" />
+                </Button>
+                </Hint>
+            </div>
+        </>
+      )}
 
        {/* Grouping */}
        {editor?.selectedObjects && editor.selectedObjects.length > 1 && (

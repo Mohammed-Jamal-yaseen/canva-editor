@@ -1,31 +1,19 @@
-import { toast } from "sonner";
 import { useMutation } from "@tanstack/react-query";
-import { InferResponseType } from "hono";
-
-import { client } from "@/lib/hono";
-
-type ResponseType = InferResponseType<typeof client.api.subscriptions.billing["$post"], 200>;
+import { toast } from "sonner";
 
 export const useBilling = () => {
-  const mutation = useMutation<
-    ResponseType,
-    Error
-  >({
+  const mutation = useMutation({
     mutationFn: async () => {
-      const response = await client.api.subscriptions.billing.$post();
-
-      if (!response.ok) {
-        throw new Error("Failed to create session");
-      }
-
-      return await response.json();
+      // Mock billing
+      console.log("Billing triggered");
+      return { url: "#" };
     },
-    onSuccess: ({ data }) => {
-      window.location.href = data;
+    onSuccess: () => {
+      toast.success("Billing simulation successful");
     },
     onError: () => {
-      toast.error("Failed to create session");
-    },
+      toast.error("Failed to trigger billing");
+    }
   });
 
   return mutation;

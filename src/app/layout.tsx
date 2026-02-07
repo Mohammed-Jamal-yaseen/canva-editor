@@ -22,6 +22,7 @@ export const metadata: Metadata = {
 };
 
 import { QueryProvider } from "@/shared/components/query-provider";
+import { ModalsProvider } from "@/shared/components/modals-provider";
 
 export default function RootLayout({
   children,
@@ -43,6 +44,7 @@ export default function RootLayout({
             defaultTheme='system'
             enableSystem
             disableTransitionOnChange>
+            <ModalsProvider />
             <div className="relative flex min-h-screen flex-col">
               {children}
             </div>
