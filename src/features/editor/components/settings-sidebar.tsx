@@ -101,6 +101,32 @@ export const SettingsSidebar = ({
           <Button type="submit" className="w-full">
             تغيير الحجم
           </Button>
+          <Button 
+            type="button" 
+            variant="destructive" 
+            className="w-full mt-2"
+            onClick={() => {
+                const workspace = editor?.getWorkspace();
+                if(!workspace) return;
+                // Keep workspace size, just clear objects
+                // Actually editor.autoZoom() might be needed?
+                // Just let's check what editor.clear() does or similar.
+                // Assuming we want to clear everything except workspace clip?
+                // For now, let's just use deletePage which effectively clears the current page or maybe specific logic?
+                // The prompt asked for "delete design".
+                // I will assume deleting *all objects*.
+                const canvas = editor?.canvas;
+                canvas?.getObjects().forEach((obj) => {
+                     if ((obj as any).name !== "clip") {
+                        canvas?.remove(obj);
+                     }
+                });
+                canvas?.renderAll();
+                editor?.saveJson(); // Auto save state
+            }}
+          >
+            مسح التصميم
+          </Button>
         </form>
         <div className="p-4 border-t">
           <ColorPicker

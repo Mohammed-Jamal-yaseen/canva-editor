@@ -14,7 +14,9 @@ import {
   Grab,
   LayoutTemplate,
   ImageIcon,
-  Sparkles
+  Sparkles,
+  Plus,
+  SettingsIcon
 } from "lucide-react";
 
 import { ActiveTool } from "@/features/editor/types";

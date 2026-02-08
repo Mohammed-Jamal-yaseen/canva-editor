@@ -13,12 +13,14 @@ interface MobilePageFooterProps {
   editor: Editor | undefined;
   onAddPage: () => void;
   onMore: () => void;
+  onClose: () => void;
 };
 
 export const MobilePageFooter = ({
   editor,
   onAddPage,
   onMore,
+  onClose,
 }: MobilePageFooterProps) => {
   return (
     <div className="fixed bottom-4 left-4 right-4 h-16 bg-white rounded-2xl shadow-2xl border flex items-center justify-around px-2 z-[60] lg:hidden">
@@ -70,7 +72,7 @@ export const MobilePageFooter = ({
 
       <div className="h-8 w-[1px] bg-slate-100 mx-1" />
 
-      <Button size="icon" variant="outline" className="rounded-full h-10 w-10 border-2">
+      <Button onClick={onClose} size="icon" variant="outline" className="rounded-full h-10 w-10 border-2">
         <Check className="size-5" />
       </Button>
     </div>

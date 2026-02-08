@@ -25,6 +25,7 @@ export const EmojiSidebar = ({ editor, activeTool, onChangeActiveTool }: EmojiSi
 
   const onEmojiClick = (emojiData: EmojiClickData) => {
     editor?.addText(emojiData.emoji);
+    onClose();
   };
 
   return (

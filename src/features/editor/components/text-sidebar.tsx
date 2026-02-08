@@ -40,7 +40,10 @@ export const TextSidebar = ({
         <div className="p-4 space-y-4 border-b">
           <Button
             className="w-full h-12 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg shadow-sm"
-            onClick={() => editor?.addText("نص جديد")}
+            onClick={() => {
+              editor?.addText("نص جديد");
+              onClose();
+            }}
           >
             إضافة مربع نص
           </Button>
@@ -52,10 +55,13 @@ export const TextSidebar = ({
             <Button
               className="w-full h-20 shadow-sm border-gray-100 hover:border-blue-500 hover:bg-blue-50/50 transition-all flex flex-col items-center justify-center gap-y-1 rounded-xl"
               variant="outline"
-              onClick={() => editor?.addText("عنوان رئيسي", {
-                fontSize: 80,
-                fontWeight: 700,
-              })}
+              onClick={() => {
+                editor?.addText("عنوان رئيسي", {
+                  fontSize: 80,
+                  fontWeight: 700,
+                });
+                onClose();
+              }}
             >
               <span className="text-2xl font-black">
                 إضافة عنوان
@@ -64,10 +70,13 @@ export const TextSidebar = ({
             <Button
               className="w-full h-16 shadow-sm border-gray-100 hover:border-blue-500 hover:bg-blue-50/50 transition-all flex flex-col items-center justify-center gap-y-1 rounded-xl"
               variant="outline"
-              onClick={() => editor?.addText("عنوان فرعي", {
-                fontSize: 44,
-                fontWeight: 600,
-              })}
+              onClick={() => {
+                editor?.addText("عنوان فرعي", {
+                  fontSize: 44,
+                  fontWeight: 600,
+                });
+                onClose();
+              }}
             >
               <span className="text-lg font-bold">
                 إضافة عنوان فرعي
@@ -76,9 +85,12 @@ export const TextSidebar = ({
             <Button
               className="w-full h-14 shadow-sm border-gray-100 hover:border-blue-500 hover:bg-blue-50/50 transition-all flex flex-col items-center justify-center gap-y-1 rounded-xl"
               variant="outline"
-              onClick={() => editor?.addText("نص فقرة", {
-                fontSize: 32,
-              })}
+              onClick={() => {
+                editor?.addText("نص فقرة", {
+                  fontSize: 32,
+                });
+                onClose();
+              }}
             >
               <span className="text-xs font-medium">
                 إضافة نص بسيط للفقرات

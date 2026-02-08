@@ -22,6 +22,12 @@ export const Hint = ({
   sideOffset,
   alignOffset
 }: HintProps) => {
+  const isMobile = typeof window !== "undefined" && window.matchMedia("(max-width: 1024px)").matches;
+
+  if (isMobile) {
+    return <>{children}</>;
+  }
+
   return (
     <TooltipProvider>
       <Tooltip delayDuration={100}>

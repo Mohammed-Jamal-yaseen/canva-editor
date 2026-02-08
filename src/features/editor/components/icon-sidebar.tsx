@@ -158,6 +158,7 @@ export const IconSidebar = ({ editor, activeTool, onChangeActiveTool }: IconSide
      
      const text = map[label] || "?";
      editor?.addText(text);
+     onClose();
   };
 
   return (

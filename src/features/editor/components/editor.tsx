@@ -128,15 +128,17 @@ export const Editor = ({ initialData }: EditorProps) => {
         {activeTool !== "select" && (
           <div 
             onClick={() => onChangeActiveTool("select")}
-            className="fixed inset-0 bg-black/5 z-[30] lg:hidden transition-all duration-300 backdrop-blur-[2px]"
+            className="fixed inset-0 bg-black/60 z-[30] lg:hidden transition-all duration-300 backdrop-blur-md"
           />
         )}
         {!isGridView && (
             <>
-                <Sidebar
-                    activeTool={activeTool}
-                    onChangeActiveTool={onChangeActiveTool}
-                />
+                <div className="hidden lg:block h-full">
+                    <Sidebar
+                        activeTool={activeTool}
+                        onChangeActiveTool={onChangeActiveTool}
+                    />
+                </div>
                 <ShapeSidebar
                     editor={editor}
                     activeTool={activeTool}
@@ -259,15 +261,19 @@ export const Editor = ({ initialData }: EditorProps) => {
               <GridManager 
                 editor={editor}
                 onAddPage={() => setAddPageModalOpen(true)}
+                onClose={() => setManualGridView(false)}
                 onSelectPage={(i) => {
                     editor?.goToPage(i);
                     setManualGridView(false);
-                    editor?.autoZoom();
+                    // Ensure it centers and fits after navigation
+                    setTimeout(() => {
+                        editor?.autoZoom();
+                    }, 100);
                 }}
               />
           )}
 
-          {!isGridView && <MobileZoomControl editor={editor} />}
+          {!isGridView && <MobileZoomControl editor={editor} onOpenPageDrawer={() => setPageDrawerOpen(true)} />}
 
           {/* Footer - Only on Desktop */}
           <div className="hidden lg:block">
@@ -281,10 +287,13 @@ export const Editor = ({ initialData }: EditorProps) => {
           
           {/* Mobile Bottom Navigation & Properties */}
           {!isGridView && (
-            <div className="lg:hidden fixed bottom-0 left-0 right-0 z-[50] flex flex-col pointer-events-none">
+            <div className={cn(
+                "lg:hidden fixed bottom-0 left-0 right-0 z-[50] flex flex-col pointer-events-none transition-all duration-300",
+                activeTool !== "select" && "translate-y-full opacity-0 invisible"
+            )}>
                 {/* Mobile Property Toolbar - Only if selection exists */}
                 {editor?.selectedObjects && editor.selectedObjects.length > 0 && (
-                    <div className="pointer-events-auto bg-white/90 backdrop-blur-md border-t shadow-[0_-5px_15px_rgba(0,0,0,0.05)] w-full overflow-hidden">
+                    <div className="pointer-events-auto bg-white/95 backdrop-blur-md border-t shadow-[0_-5px_15px_rgba(0,0,0,0.05)] w-full overflow-hidden">
                         <Toolbar
                             editor={editor}
                             activeTool={activeTool}
@@ -306,11 +315,25 @@ export const Editor = ({ initialData }: EditorProps) => {
             </div>
           )}
 
+          {/* Canva-style Floating Add Button */}
+          {!isGridView && (
+            <button
+                onClick={() => onChangeActiveTool("templates")}
+                className={cn(
+                    "lg:hidden fixed bottom-24 left-6 size-12 rounded-xl bg-gradient-to-tr from-purple-600 to-blue-600 text-white shadow-xl flex items-center justify-center z-[51] active:scale-95 transition-all duration-300",
+                    activeTool !== "select" && "opacity-0 invisible translate-y-10"
+                )}
+            >
+                <Plus className="size-6" />
+            </button>
+          )}
+
           {isGridView && (
               <MobilePageFooter 
                 editor={editor}
                 onAddPage={() => setAddPageModalOpen(true)}
                 onMore={() => setPageDrawerOpen(true)}
+                onClose={() => setManualGridView(false)}
               />
           )}
 

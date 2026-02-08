@@ -7,20 +7,28 @@ interface GridManagerProps {
   editor: Editor | undefined;
   onAddPage: () => void;
   onSelectPage: (index: number) => void;
+  onClose: () => void;
 };
 
 export const GridManager = ({
   editor,
   onAddPage,
   onSelectPage,
+  onClose,
 }: GridManagerProps) => {
   if (!editor) return null;
 
   return (
-    <div className="w-full bg-white flex-1 overflow-auto pb-20 lg:pb-0">
+    <div className="w-full bg-white h-full flex flex-col overflow-hidden pb-20 lg:pb-0 z-[100] fixed inset-0">
       {/* Top Bar with Page Thumbnails - Canva Style */}
-      <div className="border-b bg-white sticky top-0 z-10 shadow-sm">
-        <div className="px-4 py-3 flex items-center gap-x-3 overflow-x-auto">
+      <div className="border-b bg-white sticky top-0 z-10 shadow-sm shrink-0">
+        <div className="px-4 py-3 flex items-center justify-between border-b">
+            <h2 className="font-bold text-lg">عرض الشبكة</h2>
+            <Button variant="ghost" size="sm" onClick={onClose} className="rounded-full font-bold text-purple-600 hover:bg-purple-50">
+                إغلاق
+            </Button>
+        </div>
+        <div className="px-4 py-3 flex items-center gap-x-3 overflow-x-auto no-scrollbar">
           <span className="text-xs font-bold text-slate-600 whitespace-nowrap">الصفحات:</span>
           
           <div className="flex items-center gap-x-2">
@@ -46,7 +54,10 @@ export const GridManager = ({
             ))}
             
             <button
-              onClick={onAddPage}
+              onClick={() => {
+                editor.addPage();
+                onSelectPage(editor.totalPages);
+              }}
               className="flex-shrink-0 w-16 h-20 rounded-lg border-2 border-dashed border-slate-300 hover:border-purple-400 hover:bg-purple-50/50 transition-all flex flex-col items-center justify-center gap-y-1 text-slate-400 hover:text-purple-600"
             >
               <Plus className="size-5" />
@@ -92,7 +103,10 @@ export const GridManager = ({
             
             <div className="flex flex-col gap-y-2">
               <button
-                onClick={onAddPage}
+                onClick={() => {
+                   editor.addPage();
+                   onSelectPage(editor.totalPages);
+                }}
                 className="aspect-[3/4] bg-slate-100/50 rounded-xl border-2 border-dashed border-slate-300 flex items-center justify-center hover:bg-slate-100 hover:border-purple-400 transition-all group"
               >
                 <div className="flex flex-col items-center gap-y-2">

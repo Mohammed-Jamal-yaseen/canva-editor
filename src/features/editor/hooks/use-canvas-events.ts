@@ -39,6 +39,8 @@ export const useCanvasEvents = ({
         zoom *= 0.999 ** delta;
         if (zoom > 20) zoom = 20;
         if (zoom < 0.01) zoom = 0.01;
+        
+        // Limit zoom to points within reasonable bounds
         canvas.zoomToPoint(new fabric.Point(opt.e.offsetX, opt.e.offsetY), zoom);
         opt.e.preventDefault();
         opt.e.stopPropagation();
@@ -60,8 +62,20 @@ export const useCanvasEvents = ({
         if ((canvas as any).isDragging) {
           const e = opt.e as any;
           const vpt = canvas.viewportTransform;
-          vpt[4] += e.clientX - (canvas as any).lastPosX;
-          vpt[5] += e.clientY - (canvas as any).lastPosY;
+          
+          let newX = vpt[4] + (e.clientX - (canvas as any).lastPosX);
+          let newY = vpt[5] + (e.clientY - (canvas as any).lastPosY);
+
+          // Hard constraints to prevent disappearing into void
+          const limit = 5000;
+          if (newX > limit) newX = limit;
+          if (newX < -limit) newX = -limit;
+          if (newY > limit) newY = limit;
+          if (newY < -limit) newY = -limit;
+
+          vpt[4] = newX;
+          vpt[5] = newY;
+
           canvas.requestRenderAll();
           (canvas as any).lastPosX = e.clientX;
           (canvas as any).lastPosY = e.clientY;

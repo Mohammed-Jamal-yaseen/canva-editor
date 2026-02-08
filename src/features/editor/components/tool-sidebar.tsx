@@ -1,6 +1,12 @@
 import { cn } from "@/shared/lib/utils";
 import { ToolSidebarClose } from "@/features/editor/components/tool-sidebar-close";
-import { Drawer, DrawerContent } from "@/shared/components/ui/drawer";
+import { 
+  Drawer, 
+  DrawerContent, 
+  DrawerHeader, 
+  DrawerTitle, 
+  DrawerDescription 
+} from "@/shared/components/ui/drawer";
 import { useMedia } from "react-use";
 
 interface ToolSidebarProps {
@@ -22,6 +28,10 @@ export const ToolSidebar = ({
     return (
       <Drawer open={active} onOpenChange={(open) => !open && onClose()}>
         <DrawerContent className="h-[80%] px-0 pb-0 overflow-hidden outline-none">
+          <DrawerHeader className="sr-only">
+             <DrawerTitle>Tool Sidebar</DrawerTitle>
+             <DrawerDescription>Tool settings and options</DrawerDescription>
+          </DrawerHeader>
           <div className="flex flex-col h-full bg-white relative">
             <div className="flex-1 flex flex-col overflow-hidden">
                 {children}
