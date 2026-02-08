@@ -54,7 +54,13 @@ const buildEditor = ({
   selectedObjects,
   strokeDashArray,
   setStrokeDashArray,
-}: BuildEditorProps): Editor => {
+  pages,
+  setPages,
+  zoom,
+  setZoom,
+  currentPage,
+  setCurrentPage,
+}: BuildEditorProps & { zoom: number; currentPage: number; pages: string[] }): Editor => {
   const generateSaveOptions = () => {
     const workspace = getWorkspace() as fabric.Rect;
     const { width = 0, height = 0, left = 0, top = 0 } = workspace || {};
@@ -169,21 +175,25 @@ const buildEditor = ({
     getWorkspace,
     zoomIn: () => {
       let zoomRatio = canvas.getZoom();
-      zoomRatio += 0.05;
+      zoomRatio += 0.1;
       const center = canvas.getVpCenter();
+      const newZoom = zoomRatio > 10 ? 10 : zoomRatio;
       canvas.zoomToPoint(
         new fabric.Point(center.x, center.y),
-        zoomRatio > 10 ? 10 : zoomRatio
+        newZoom
       );
+      setZoom(newZoom);
     },
     zoomOut: () => {
       let zoomRatio = canvas.getZoom();
-      zoomRatio -= 0.05;
+      zoomRatio -= 0.1;
       const center = canvas.getVpCenter();
+      const newZoom = zoomRatio < 0.1 ? 0.1 : zoomRatio;
       canvas.zoomToPoint(
         new fabric.Point(center.x, center.y),
-        zoomRatio < 0.1 ? 0.1 : zoomRatio,
+        newZoom,
       );
+      setZoom(newZoom);
     },
     changeSize: (value: { width: number; height: number }) => {
       const workspace = getWorkspace();
@@ -236,8 +246,18 @@ const buildEditor = ({
       ).then((image) => {
         const workspace = getWorkspace();
 
-        image.scaleToWidth(workspace?.width || 0);
-        image.scaleToHeight(workspace?.height || 0);
+        // Scale image to fit within workspace while maintaining aspect ratio
+        const workspaceWidth = workspace?.width || 800;
+        const workspaceHeight = workspace?.height || 1000;
+        
+        if (image.width && image.height) {
+          const scale = Math.min(
+            workspaceWidth / image.width,
+            workspaceHeight / image.height,
+            1 // Don't scale up, only down
+          );
+          image.scale(scale);
+        }
 
         addToCanvas(image);
       });
@@ -246,6 +266,7 @@ const buildEditor = ({
       canvas.getActiveObjects().forEach((object) => canvas.remove(object));
       canvas.discardActiveObject();
       canvas.renderAll();
+      save();
     },
     clear: () => {
       canvas.getObjects().forEach((object) => {
@@ -791,6 +812,393 @@ const buildEditor = ({
       canvas.renderAll();
       save();
     },
+    // Page Management Functions
+    addPage: (options?: { width: number; height: number }) => {
+      const workspace = getWorkspace();
+      const pageWidth = options?.width || workspace?.width || 800;
+      const pageHeight = options?.height || workspace?.height || 1000;
+      
+      // Save current page state to pages array
+      // @ts-expect-error - Fabric 7 type mismatch
+      const currentState = JSON.stringify(canvas.toJSON(JSON_KEYS));
+      
+      // Update pages array with current page
+      const updatedPages = [...pages];
+      updatedPages[currentPage] = currentState;
+      
+      // Add new empty page
+      updatedPages.push("");
+      setPages(updatedPages);
+      setCurrentPage(updatedPages.length - 1);
+      
+      // Clear canvas except workspace
+      canvas.getObjects().forEach((object) => {
+        if ((object as any).name !== "clip") {
+          canvas.remove(object);
+        }
+      });
+      
+      // Update or create workspace with new dimensions
+      if (workspace) {
+        workspace.set({ width: pageWidth, height: pageHeight });
+        canvas.centerObject(workspace);
+      } else {
+        const newWorkspace = new fabric.Rect({
+          width: pageWidth,
+          height: pageHeight,
+          fill: "white",
+          name: "clip",
+          selectable: false,
+          hasControls: false,
+          shadow: new fabric.Shadow({
+            color: "rgba(0,0,0,0.8)",
+            blur: 5,
+          }),
+        });
+        
+        canvas.add(newWorkspace);
+        canvas.centerObject(newWorkspace);
+        canvas.clipPath = newWorkspace;
+      }
+      
+      canvas.renderAll();
+      autoZoom();
+      save();
+    },
+    deletePage: () => {
+      if (pages.length <= 1) {
+        // If only one page, just clear it
+        canvas.getObjects().forEach((object) => {
+          if ((object as any).name !== "clip") {
+            canvas.remove(object);
+          }
+        });
+        canvas.discardActiveObject();
+        canvas.renderAll();
+        save();
+        return;
+      }
+      
+      // Remove current page from array
+      const updatedPages = pages.filter((_, index) => index !== currentPage);
+      setPages(updatedPages);
+      
+      // Navigate to previous page or first page
+      const newCurrentPage = currentPage > 0 ? currentPage - 1 : 0;
+      setCurrentPage(newCurrentPage);
+      
+      // Load the new current page
+      if (updatedPages[newCurrentPage]) {
+        try {
+          const pageData = JSON.parse(updatedPages[newCurrentPage]);
+          canvas.loadFromJSON(pageData).then(() => {
+            canvas.renderAll();
+            autoZoom();
+          });
+        } catch (error) {
+          console.error("Error loading page:", error);
+        }
+      } else {
+        // Clear canvas if no page data
+        canvas.getObjects().forEach((object) => {
+          if ((object as any).name !== "clip") {
+            canvas.remove(object);
+          }
+        });
+        canvas.discardActiveObject();
+        canvas.renderAll();
+      }
+      
+      save();
+    },
+    nextPage: () => {
+      if (currentPage >= pages.length - 1) return;
+      
+      // Save current page state
+      // @ts-expect-error - Fabric 7 type mismatch
+      const currentState = JSON.stringify(canvas.toJSON(JSON_KEYS));
+      const updatedPages = [...pages];
+      updatedPages[currentPage] = currentState;
+      setPages(updatedPages);
+      
+      // Navigate to next page
+      const nextPageIndex = currentPage + 1;
+      setCurrentPage(nextPageIndex);
+      
+      // Clear canvas first
+      canvas.getObjects().forEach((object) => {
+        if ((object as any).name !== "clip") {
+          canvas.remove(object);
+        }
+      });
+
+      // Load next page
+      if (updatedPages[nextPageIndex] && updatedPages[nextPageIndex] !== "") {
+        try {
+          const pageData = JSON.parse(updatedPages[nextPageIndex]);
+          canvas.loadFromJSON(pageData).then(() => {
+            canvas.renderAll();
+            autoZoom();
+          });
+        } catch (error) {
+          console.error("Error loading page:", error);
+        }
+      } else {
+        canvas.renderAll();
+        autoZoom();
+      }
+    },
+    prevPage: () => {
+      if (currentPage <= 0) return;
+      
+      // Save current page state
+      // @ts-expect-error - Fabric 7 type mismatch
+      const currentState = JSON.stringify(canvas.toJSON(JSON_KEYS));
+      const updatedPages = [...pages];
+      updatedPages[currentPage] = currentState;
+      setPages(updatedPages);
+      
+      // Navigate to previous page
+      const prevPageIndex = currentPage - 1;
+      setCurrentPage(prevPageIndex);
+      
+      // Clear canvas first
+      canvas.getObjects().forEach((object) => {
+        if ((object as any).name !== "clip") {
+          canvas.remove(object);
+        }
+      });
+
+      // Load previous page
+      if (updatedPages[prevPageIndex] && updatedPages[prevPageIndex] !== "") {
+        try {
+          const pageData = JSON.parse(updatedPages[prevPageIndex]);
+          canvas.loadFromJSON(pageData).then(() => {
+            canvas.renderAll();
+            autoZoom();
+          });
+        } catch (error) {
+          console.error("Error loading page:", error);
+        }
+      } else {
+        canvas.renderAll();
+        autoZoom();
+      }
+    },
+    goToPage: (index: number) => {
+      if (index < 0 || index >= pages.length) return;
+      if (index === currentPage) return;
+      
+      // Save current page state
+      // @ts-expect-error - Fabric 7 type mismatch
+      const currentState = JSON.stringify(canvas.toJSON(JSON_KEYS));
+      const updatedPages = [...pages];
+      updatedPages[currentPage] = currentState;
+      setPages(updatedPages);
+      
+      // Navigate to target page
+      setCurrentPage(index);
+      
+      // Clear canvas first
+      canvas.getObjects().forEach((object) => {
+        if ((object as any).name !== "clip") {
+          canvas.remove(object);
+        }
+      });
+
+      // Load target page
+      if (updatedPages[index] && updatedPages[index] !== "") {
+        try {
+          const pageData = JSON.parse(updatedPages[index]);
+          canvas.loadFromJSON(pageData).then(() => {
+            canvas.renderAll();
+            autoZoom();
+          });
+        } catch (error) {
+          console.error("Error loading page:", error);
+        }
+      } else {
+        // If empty page, just render workspace and autozoom
+        canvas.renderAll();
+        autoZoom();
+      }
+    },
+    setZoom: (value: number) => {
+      const clampedZoom = Math.min(Math.max(value, 0.1), 10);
+      const center = canvas.getVpCenter();
+      canvas.zoomToPoint(
+        new fabric.Point(center.x, center.y),
+        clampedZoom
+      );
+      setZoom(clampedZoom);
+    },
+    toggleLock: () => {
+      const activeObject = canvas.getActiveObject();
+      if (!activeObject) return;
+      
+      // @ts-ignore
+      const isLocked = activeObject.get("locked");
+      
+      if (isLocked) {
+        activeObject.set({
+          lockMovementX: false,
+          lockMovementY: false,
+          lockRotation: false,
+          lockScalingX: false,
+          lockScalingY: false,
+        });
+        // @ts-ignore
+        activeObject.set("locked", false);
+      } else {
+        activeObject.set({
+          lockMovementX: true,
+          lockMovementY: true,
+          lockRotation: true,
+          lockScalingX: true,
+          lockScalingY: true,
+        });
+        // @ts-ignore
+        activeObject.set("locked", true);
+      }
+      
+      canvas.renderAll();
+      save();
+    },
+    zoomToSelected: () => {
+      const activeObject = canvas.getActiveObject();
+      if (!activeObject) return;
+      
+      const center = activeObject.getCenterPoint();
+      canvas.zoomToPoint(
+        new fabric.Point(center.x, center.y),
+        1.5
+      );
+    },
+    // Additional Shape Functions
+    addPentagon: () => {
+      const points = [];
+      const sides = 5;
+      const radius = 50;
+      
+      for (let i = 0; i < sides; i++) {
+        const angle = (i * 2 * Math.PI) / sides - Math.PI / 2;
+        points.push({
+          x: radius + radius * Math.cos(angle),
+          y: radius + radius * Math.sin(angle),
+        });
+      }
+      
+      const object = new fabric.Polygon(points, {
+        left: 100,
+        top: 100,
+        fill: fillColor,
+        stroke: strokeColor,
+        strokeWidth: strokeWidth,
+        strokeDashArray: strokeDashArray,
+      });
+      
+      addToCanvas(object);
+    },
+    addHexagon: () => {
+      const points = [];
+      const sides = 6;
+      const radius = 50;
+      
+      for (let i = 0; i < sides; i++) {
+        const angle = (i * 2 * Math.PI) / sides - Math.PI / 2;
+        points.push({
+          x: radius + radius * Math.cos(angle),
+          y: radius + radius * Math.sin(angle),
+        });
+      }
+      
+      const object = new fabric.Polygon(points, {
+        left: 100,
+        top: 100,
+        fill: fillColor,
+        stroke: strokeColor,
+        strokeWidth: strokeWidth,
+        strokeDashArray: strokeDashArray,
+      });
+      
+      addToCanvas(object);
+    },
+    addOctagon: () => {
+      const points = [];
+      const sides = 8;
+      const radius = 50;
+      
+      for (let i = 0; i < sides; i++) {
+        const angle = (i * 2 * Math.PI) / sides - Math.PI / 2;
+        points.push({
+          x: radius + radius * Math.cos(angle),
+          y: radius + radius * Math.sin(angle),
+        });
+      }
+      
+      const object = new fabric.Polygon(points, {
+        left: 100,
+        top: 100,
+        fill: fillColor,
+        stroke: strokeColor,
+        strokeWidth: strokeWidth,
+        strokeDashArray: strokeDashArray,
+      });
+      
+      addToCanvas(object);
+    },
+    addStar: () => {
+      const points = [];
+      const outerRadius = 50;
+      const innerRadius = 25;
+      const spikes = 5;
+      
+      for (let i = 0; i < spikes * 2; i++) {
+        const radius = i % 2 === 0 ? outerRadius : innerRadius;
+        const angle = (i * Math.PI) / spikes - Math.PI / 2;
+        points.push({
+          x: outerRadius + radius * Math.cos(angle),
+          y: outerRadius + radius * Math.sin(angle),
+        });
+      }
+      
+      const object = new fabric.Polygon(points, {
+        left: 100,
+        top: 100,
+        fill: fillColor,
+        stroke: strokeColor,
+        strokeWidth: strokeWidth,
+        strokeDashArray: strokeDashArray,
+      });
+      
+      addToCanvas(object);
+    },
+    addArrow: () => {
+      const points = [
+        { x: 0, y: 20 },
+        { x: 60, y: 20 },
+        { x: 60, y: 0 },
+        { x: 100, y: 30 },
+        { x: 60, y: 60 },
+        { x: 60, y: 40 },
+        { x: 0, y: 40 },
+      ];
+      
+      const object = new fabric.Polygon(points, {
+        left: 100,
+        top: 100,
+        fill: fillColor,
+        stroke: strokeColor,
+        strokeWidth: strokeWidth,
+        strokeDashArray: strokeDashArray,
+      });
+      
+      addToCanvas(object);
+    },
+    onSave: (skip = false) => save(skip, false),
+    zoom,
+    currentPage,
+    totalPages: Math.max(pages.length, 1),
   };
 };
 
@@ -815,6 +1223,11 @@ export const useEditor = ({
   const [strokeColor, setStrokeColor] = useState(STROKE_COLOR);
   const [strokeWidth, setStrokeWidth] = useState(STROKE_WIDTH);
   const [strokeDashArray, setStrokeDashArray] = useState<number[]>(STROKE_DASH_ARRAY);
+  
+  // Page management state
+  const [pages, setPages] = useState<string[]>([]);
+  const [currentPage, setCurrentPage] = useState(0);
+  const [zoom, setZoom] = useState(1);
 
   useWindowEvents();
 
@@ -865,7 +1278,7 @@ export const useEditor = ({
 
   const editor = useMemo(() => {
     if (canvas) {
-      return buildEditor({
+      const editorInstance = buildEditor({
         save,
         undo,
         redo,
@@ -886,7 +1299,15 @@ export const useEditor = ({
         setStrokeDashArray,
         fontFamily,
         setFontFamily,
+        pages,
+        setPages,
+        zoom,
+        setZoom,
+        currentPage,
+        setCurrentPage,
       });
+      
+      return editorInstance;
     }
 
     return undefined;
@@ -907,6 +1328,9 @@ export const useEditor = ({
     selectedObjects,
     strokeDashArray,
     fontFamily,
+    pages,
+    currentPage,
+    zoom,
   ]);
 
   const init = useCallback(
@@ -958,6 +1382,11 @@ export const useEditor = ({
       );
       canvasHistoryRef.current = [currentState];
       setHistoryIndex(0);
+      
+      // Initialize pages array with first page
+      setPages([currentState]);
+      setCurrentPage(0);
+      setZoom(1);
     },
     [
       canvasHistoryRef, // No need, this is from useRef

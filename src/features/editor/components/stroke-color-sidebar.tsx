@@ -12,6 +12,8 @@ interface StrokeColorSidebarProps {
   onChangeActiveTool: (tool: ActiveTool) => void;
 };
 
+import { ToolSidebar } from "@/features/editor/components/tool-sidebar";
+
 export const StrokeColorSidebar = ({
   editor,
   activeTool,
@@ -28,15 +30,13 @@ export const StrokeColorSidebar = ({
   };
 
   return (
-    <aside
-      className={cn(
-        "bg-white relative border-r z-[40] w-full lg:w-[300px] h-full flex flex-col",
-        activeTool === "stroke-color" ? "visible" : "hidden",
-      )}
+    <ToolSidebar
+      active={activeTool === "stroke-color"}
+      onClose={onClose}
     >
       <ToolSidebarHeader
-        title="Stroke color"
-        description="Add stroke color to your element"
+        title="لون الإطار"
+        description="إضافة لون للإطار الخاص بالعنصر"
       />
       <ScrollArea>
         <div className="p-4 space-y-6">
@@ -46,7 +46,6 @@ export const StrokeColorSidebar = ({
           />
         </div>
       </ScrollArea>
-      <ToolSidebarClose onClick={onClose} />
-    </aside>
+    </ToolSidebar>
   );
 };

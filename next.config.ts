@@ -25,6 +25,10 @@ const nextConfig: NextConfig = {
           protocol: "https",
           hostname: "images.unsplash.com",
         },
+        {
+          protocol: "https",
+          hostname: "3h9fsywp0e.ufs.sh",
+        },
       ],
     },
     turbopack: {

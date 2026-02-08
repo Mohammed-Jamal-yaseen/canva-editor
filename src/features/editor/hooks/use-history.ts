@@ -25,7 +25,7 @@ export const useHistory = ({ canvas, saveCallback }: UseHistoryProps) => {
     return historyIndex < canvasHistoryRef.current.length - 1;
   }, [historyIndex]);
 
-  const save = useCallback((skip = false) => {
+  const save = useCallback((skip = false, skipCallback = true) => {
     if (!canvas) return;
 
     // @ts-expect-error - Fabric 7 type mismatch
@@ -37,13 +37,15 @@ export const useHistory = ({ canvas, saveCallback }: UseHistoryProps) => {
       setHistoryIndex(canvasHistoryRef.current.length - 1);
     }
 
-    const workspace = canvas
-      .getObjects()
-      .find((object) => object.type === "clip");
-    const height = workspace?.height || 0;
-    const width = workspace?.width || 0;
+    if (!skipCallback) {
+      const workspace = canvas
+        .getObjects()
+        .find((object) => (object as any).name === "clip");
+      const height = workspace?.height || 0;
+      const width = workspace?.width || 0;
 
-    saveCallback?.({ json, height, width });
+      saveCallback?.({ json, height, width });
+    }
   }, 
   [
     canvas,

@@ -138,7 +138,7 @@ export const FONT_SIZE = 32;
 export const FONT_WEIGHT = 400;
 
 export const CIRCLE_OPTIONS = {
-  radius: 225,
+  radius: 50,
   left: 100,
   top: 100,
   fill: FILL_COLOR,
@@ -152,8 +152,8 @@ export const RECTANGLE_OPTIONS = {
   fill: FILL_COLOR,
   stroke: STROKE_COLOR,
   strokeWidth: STROKE_WIDTH,
-  width: 400,
-  height: 400,
+  width: 100,
+  height: 100,
   angle: 0,
 };
 
@@ -163,8 +163,8 @@ export const DIAMOND_OPTIONS = {
   fill: FILL_COLOR,
   stroke: STROKE_COLOR,
   strokeWidth: STROKE_WIDTH,
-  width: 600,
-  height: 600,
+  width: 100,
+  height: 100,
   angle: 0,
 };
 
@@ -174,8 +174,63 @@ export const TRIANGLE_OPTIONS = {
   fill: FILL_COLOR,
   stroke: STROKE_COLOR,
   strokeWidth: STROKE_WIDTH,
-  width: 400,
-  height: 400,
+  width: 100,
+  height: 100,
+  angle: 0,
+};
+
+export const PENTAGON_OPTIONS = {
+  left: 100,
+  top: 100,
+  fill: FILL_COLOR,
+  stroke: STROKE_COLOR,
+  strokeWidth: STROKE_WIDTH,
+  width: 100,
+  height: 100,
+  angle: 0,
+};
+
+export const HEXAGON_OPTIONS = {
+  left: 100,
+  top: 100,
+  fill: FILL_COLOR,
+  stroke: STROKE_COLOR,
+  strokeWidth: STROKE_WIDTH,
+  width: 100,
+  height: 100,
+  angle: 0,
+};
+
+export const OCTAGON_OPTIONS = {
+  left: 100,
+  top: 100,
+  fill: FILL_COLOR,
+  stroke: STROKE_COLOR,
+  strokeWidth: STROKE_WIDTH,
+  width: 100,
+  height: 100,
+  angle: 0,
+};
+
+export const STAR_OPTIONS = {
+  left: 100,
+  top: 100,
+  fill: FILL_COLOR,
+  stroke: STROKE_COLOR,
+  strokeWidth: STROKE_WIDTH,
+  width: 100,
+  height: 100,
+  angle: 0,
+};
+
+export const ARROW_OPTIONS = {
+  left: 100,
+  top: 100,
+  fill: FILL_COLOR,
+  stroke: STROKE_COLOR,
+  strokeWidth: STROKE_WIDTH,
+  width: 100,
+  height: 100,
   angle: 0,
 };
 
@@ -204,7 +259,7 @@ export interface EditorHookProps {
 export type BuildEditorProps = {
   undo: () => void;
   redo: () => void;
-  save: (skip?: boolean) => void;
+  save: (skip?: boolean, skipCallback?: boolean) => void;
   canUndo: () => boolean;
   canRedo: () => boolean;
   autoZoom: () => void;
@@ -222,7 +277,23 @@ export type BuildEditorProps = {
   setStrokeColor: (value: string) => void;
   setStrokeWidth: (value: number) => void;
   setFontFamily: (value: string) => void;
+  pages: string[];
+  setPages: (value: string[]) => void;
+  zoom: number;
+  setZoom: (value: number) => void;
+  currentPage: number;
+  setCurrentPage: (value: number) => void;
 };
+
+export const PAGE_TYPES = [
+  { label: "ورقة (Sheet)", width: 1200, height: 1600, icon: "Sheet" },
+  { label: "مستند (Doc)", width: 2480, height: 3508, icon: "Doc" },
+  { label: "عرض تقديمي (Presentation)", width: 1920, height: 1080, icon: "Presentation" },
+  { label: "سبورة بيضاء (Whiteboard)", width: 2000, height: 2000, icon: "Whiteboard" },
+  { label: "نيوشل ميديا (Social Media)", width: 1080, height: 1080, icon: "SocialMedia" },
+  { label: "فيديو (Video)", width: 1920, height: 1080, icon: "Video" },
+  { label: "موقع إلكتروني (Websites)", width: 1366, height: 768, icon: "Websites" },
+];
 
 export interface Editor {
   savePng: () => void;
@@ -237,6 +308,7 @@ export interface Editor {
   autoZoom: () => void;
   zoomIn: () => void;
   zoomOut: () => void;
+  setZoom: (value: number) => void;
   getWorkspace: () => fabric.Object | undefined;
   changeBackground: (value: string) => void;
   changeSize: (value: { width: number; height: number }) => void;
@@ -277,6 +349,13 @@ export interface Editor {
   addTriangle: () => void;
   addInverseTriangle: () => void;
   addDiamond: () => void;
+  addPentagon: () => void;
+  addHexagon: () => void;
+  addOctagon: () => void;
+  addStar: () => void;
+  addArrow: () => void;
+  // Todo Add more for any shapes 
+  // ..
   canvas: fabric.Canvas;
   getActiveFillColor: () => string;
   getActiveStrokeColor: () => string;
@@ -287,5 +366,16 @@ export interface Editor {
   ungroupObjects: () => void;
   lock: () => void;
   unlock: () => void;
+  toggleLock: () => void;
+  zoomToSelected: () => void;
+  addPage: (options?: { width: number; height: number }) => void;
+  deletePage: () => void;
+  nextPage: () => void;
+  prevPage: () => void;
+  goToPage: (index: number) => void;
+  zoom: number;
+  currentPage: number;
+  onSave: (skip?: boolean) => void;
+  totalPages: number;
   align: (position: "left" | "center" | "right" | "top" | "middle" | "bottom" | "distribute-horizontal" | "distribute-vertical") => void;
 };

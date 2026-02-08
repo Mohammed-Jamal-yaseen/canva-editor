@@ -16,6 +16,8 @@ interface TextSidebarProps {
   onChangeActiveTool: (tool: ActiveTool) => void;
 };
 
+import { ToolSidebar } from "@/features/editor/components/tool-sidebar";
+
 export const TextSidebar = ({
   editor,
   activeTool,
@@ -26,68 +28,65 @@ export const TextSidebar = ({
   };
 
   return (
-    <aside
-      className={cn(
-        "bg-white relative border-r z-[40] w-full lg:w-[300px] h-full flex flex-col",
-        activeTool === "text" ? "visible" : "hidden",
-      )}
+    <ToolSidebar
+      active={activeTool === "text"}
+      onClose={onClose}
     >
       <ToolSidebarHeader
-        title="Text"
-        description="Add text to your canvas"
+        title="النصوص"
+        description="أضف نصوصاً بتنسيقات مختلفة لتصميمك"
       />
       <ScrollArea>
         <div className="p-4 space-y-4 border-b">
           <Button
-            className="w-full h-12 bg-blue-600 hover:bg-blue-700 text-white font-semibold"
-            onClick={() => editor?.addText("Textbox")}
+            className="w-full h-12 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg shadow-sm"
+            onClick={() => editor?.addText("نص جديد")}
           >
-            Add a textbox
+            إضافة مربع نص
           </Button>
           
           <div className="space-y-3 pt-2">
-            <p className="text-xs font-bold text-muted-foreground uppercase tracking-wider">
-              Default text styles
+            <p className="text-[10px] font-black text-muted-foreground uppercase tracking-widest">
+                أنماط النصوص الافتراضية
             </p>
             <Button
-              className="w-full h-20 shadow-sm border-gray-100 hover:border-blue-500 hover:bg-blue-50/50 transition-all flex flex-col items-center justify-center gap-y-1"
+              className="w-full h-20 shadow-sm border-gray-100 hover:border-blue-500 hover:bg-blue-50/50 transition-all flex flex-col items-center justify-center gap-y-1 rounded-xl"
               variant="outline"
-              onClick={() => editor?.addText("Heading", {
+              onClick={() => editor?.addText("عنوان رئيسي", {
                 fontSize: 80,
                 fontWeight: 700,
               })}
             >
               <span className="text-2xl font-black">
-                Add a heading
+                إضافة عنوان
               </span>
             </Button>
             <Button
-              className="w-full h-16 shadow-sm border-gray-100 hover:border-blue-500 hover:bg-blue-50/50 transition-all flex flex-col items-center justify-center gap-y-1"
+              className="w-full h-16 shadow-sm border-gray-100 hover:border-blue-500 hover:bg-blue-50/50 transition-all flex flex-col items-center justify-center gap-y-1 rounded-xl"
               variant="outline"
-              onClick={() => editor?.addText("Subheading", {
+              onClick={() => editor?.addText("عنوان فرعي", {
                 fontSize: 44,
                 fontWeight: 600,
               })}
             >
               <span className="text-lg font-bold">
-                Add a subheading
+                إضافة عنوان فرعي
               </span>
             </Button>
             <Button
-              className="w-full h-14 shadow-sm border-gray-100 hover:border-blue-500 hover:bg-blue-50/50 transition-all flex flex-col items-center justify-center gap-y-1"
+              className="w-full h-14 shadow-sm border-gray-100 hover:border-blue-500 hover:bg-blue-50/50 transition-all flex flex-col items-center justify-center gap-y-1 rounded-xl"
               variant="outline"
-              onClick={() => editor?.addText("Paragraph", {
+              onClick={() => editor?.addText("نص فقرة", {
                 fontSize: 32,
               })}
             >
-              <span className="text-sm font-medium">
-                Add a little bit of body text
+              <span className="text-xs font-medium">
+                إضافة نص بسيط للفقرات
               </span>
             </Button>
           </div>
         </div>
       </ScrollArea>
-      <ToolSidebarClose onClick={onClose} />
-    </aside>
+    </ToolSidebar>
   );
 };

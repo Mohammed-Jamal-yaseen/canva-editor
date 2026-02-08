@@ -12,6 +12,8 @@ interface FillColorSidebarProps {
   onChangeActiveTool: (tool: ActiveTool) => void;
 };
 
+import { ToolSidebar } from "@/features/editor/components/tool-sidebar";
+
 export const FillColorSidebar = ({
   editor,
   activeTool,
@@ -28,15 +30,13 @@ export const FillColorSidebar = ({
   };
 
   return (
-    <aside
-      className={cn(
-        "bg-white relative border-r z-[40] w-full lg:w-[300px] h-full flex flex-col",
-        activeTool === "fill" ? "visible" : "hidden",
-      )}
+    <ToolSidebar
+      active={activeTool === "fill"}
+      onClose={onClose}
     >
       <ToolSidebarHeader
-        title="Fill color"
-        description="Add fill color to your element"
+        title="لون التعبئة"
+        description="تغيير لون التعبئة للعنصر المختار"
       />
       <ScrollArea>
         <div className="p-4 space-y-6">
@@ -46,7 +46,6 @@ export const FillColorSidebar = ({
           />
         </div>
       </ScrollArea>
-      <ToolSidebarClose onClick={onClose} />
-    </aside>
+    </ToolSidebar>
   );
 };

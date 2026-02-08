@@ -6,9 +6,16 @@ export const useUpdateProject = (id: string) => {
 
   const mutation = useMutation({
     mutationFn: async (values: any) => {
-      // Dummy API call
-      console.log("Updating project", id, values);
-      return { data: values };
+      const response = await fetch(`/api/projects/${id}`, {
+        method: "PATCH",
+        body: JSON.stringify(values),
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to update project");
+      }
+
+      return await response.json();
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["project", { id }] });

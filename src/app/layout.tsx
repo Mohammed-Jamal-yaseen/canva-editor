@@ -1,19 +1,23 @@
 import type { Metadata } from "next";
-import { IBM_Plex_Sans_Arabic, IBM_Plex_Mono } from "next/font/google";
 import "./globals.css";
 import { cn } from "@/shared/lib/utils";
 import { ThemeProvider } from "@/shared/components/theme-provider";
 import { Toaster } from "@/shared/components/ui/sonner"
+
+import { IBM_Plex_Sans_Arabic, Space_Mono } from "next/font/google";
+
 const ibmPlexArabic = IBM_Plex_Sans_Arabic({
   subsets: ["arabic"],
   weight: ["300", "400", "500", "600", "700"],
   variable: "--font-ibm-plex-arabic",
+  display: "swap",
 });
 
-const ibmPlexMono = IBM_Plex_Mono({
+const spaceMono = Space_Mono({
   subsets: ["latin"],
-  weight: ["400", "500"],
-  variable: "--font-ibm-plex-mono",
+  weight: ["400", "700"],
+  variable: "--font-space-mono",
+  display: "swap",
 });
 
 export const metadata: Metadata = {
@@ -33,9 +37,9 @@ export default function RootLayout({
     <html lang="ar" dir="rtl" suppressHydrationWarning>
       <body
         className={cn(
-          "min-h-screen bg-background antialiased",
+          "min-h-screen bg-background antialiased font-sans",
           ibmPlexArabic.variable,
-          ibmPlexMono.variable
+          spaceMono.variable
         )}
       >
         <QueryProvider>

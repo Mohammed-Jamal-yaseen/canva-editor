@@ -6,8 +6,15 @@ export const useDeleteProject = () => {
 
   return useMutation({
     mutationFn: async ({ id }: { id: string }) => {
-      console.log("Deleting project", id);
-      return { id };
+      const response = await fetch(`/api/projects/${id}`, {
+        method: "DELETE",
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to delete project");
+      }
+
+      return await response.json();
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["projects"] });

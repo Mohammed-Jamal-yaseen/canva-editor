@@ -1,6 +1,12 @@
 import { IoTriangle } from "react-icons/io5";
 import { FaDiamond } from "react-icons/fa6";
 import { FaCircle, FaSquare, FaSquareFull } from "react-icons/fa";
+import { 
+  Star, 
+  ArrowUp,
+  Hexagon,
+  Square
+} from "lucide-react";
 
 import { ActiveTool, Editor } from "@/features/editor/types";
 import { ShapeTool } from "@/features/editor/components/shape-tool";
@@ -16,6 +22,8 @@ interface ShapeSidebarProps {
   onChangeActiveTool: (tool: ActiveTool) => void;
 };
 
+import { ToolSidebar } from "@/features/editor/components/tool-sidebar";
+
 export const ShapeSidebar = ({
   editor,
   activeTool,
@@ -26,18 +34,16 @@ export const ShapeSidebar = ({
   };
 
   return (
-    <aside
-      className={cn(
-        "bg-white relative border-r z-[40] w-full lg:w-[300px] h-full flex flex-col",
-        activeTool === "shapes" ? "visible" : "hidden",
-      )}
+    <ToolSidebar
+      active={activeTool === "shapes"}
+      onClose={onClose}
     >
       <ToolSidebarHeader
-        title="Shapes"
-        description="Add shapes to your canvas"
+        title="الأشكال"
+        description="أضف أشكالاً متنوعة للتصميم"
       />
       <ScrollArea>
-        <div className="grid grid-cols-3 gap-4 p-4">
+        <div className="grid grid-cols-3 gap-2 p-4">
           <ShapeTool
             onClick={() => editor?.addCircle()}
             icon={FaCircle}
@@ -63,9 +69,31 @@ export const ShapeSidebar = ({
             onClick={() => editor?.addDiamond()}
             icon={FaDiamond}
           />
+          <ShapeTool
+            onClick={() => editor?.addPentagon()}
+            icon={Hexagon}
+            iconClassName="rotate-[18deg]"
+          />
+          <ShapeTool
+            onClick={() => editor?.addHexagon()}
+            icon={Hexagon}
+          />
+          <ShapeTool
+            onClick={() => editor?.addOctagon()}
+            icon={Hexagon}
+            iconClassName="rotate-[22.5deg]"
+          />
+          <ShapeTool
+            onClick={() => editor?.addStar()}
+            icon={Star}
+          />
+          <ShapeTool
+            onClick={() => editor?.addArrow()}
+            icon={ArrowUp}
+            iconClassName="rotate-90"
+          />
         </div>
       </ScrollArea>
-      <ToolSidebarClose onClick={onClose} />
-    </aside>
+    </ToolSidebar>
   );
 };

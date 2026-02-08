@@ -16,6 +16,8 @@ interface FilterSidebarProps {
   onChangeActiveTool: (tool: ActiveTool) => void;
 };
 
+import { ToolSidebar } from "@/features/editor/components/tool-sidebar";
+
 export const FilterSidebar = ({
   editor,
   activeTool,
@@ -26,15 +28,13 @@ export const FilterSidebar = ({
   };
 
   return (
-    <aside
-      className={cn(
-        "bg-white relative border-r z-[40] w-full lg:w-[300px] h-full flex flex-col",
-        activeTool === "filter" ? "visible" : "hidden",
-      )}
+    <ToolSidebar
+      active={activeTool === "filter"}
+      onClose={onClose}
     >
       <ToolSidebarHeader
-        title="Filters"
-        description="Apply a filter to selected image"
+        title="الفلاتر"
+        description="تطبيق فلاتر على الصورة المختارة"
       />
       <ScrollArea>
         <div className="p-4 space-y-1 border-b">
@@ -51,7 +51,6 @@ export const FilterSidebar = ({
           ))}
         </div>
       </ScrollArea>
-      <ToolSidebarClose onClick={onClose} />
-    </aside>
+    </ToolSidebar>
   );
 };

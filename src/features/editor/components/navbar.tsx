@@ -97,59 +97,88 @@ export const Navbar = ({
   }
 
   return (
-    <nav className="w-full flex items-center p-4 h-[68px] gap-x-8 border-b bg-white shadow-sm sticky top-0 z-[50]">
-      <div className="flex items-center gap-x-4">
+    <nav className="w-full flex items-center px-4 h-[68px] gap-x-2 lg:gap-x-8 border-b bg-white shadow-sm sticky top-0 z-[50]">
+      <div className="flex items-center gap-x-2 lg:gap-x-4 shrink-0">
         <Logo />
-        <div className="hidden lg:flex items-center gap-x-2 text-sm text-muted-foreground">
+        <div className="hidden lg:flex items-center gap-x-2 text-sm text-muted-foreground mr-auto">
           <ChevronRight className="size-4" />
           <span className="font-medium text-foreground truncate max-w-[200px]">
              Design Project
           </span>
-          <div className="flex items-center ml-2 border-l pl-4">
+          <div className="flex items-center ml-2 border-l pl-4 gap-x-2">
+            <Button 
+              size="sm" 
+              variant="outline" 
+              onClick={() => editor?.onSave()}
+              disabled={isPending}
+              className="h-8 gap-x-2 bg-slate-50 hover:bg-slate-100 border-none shadow-none text-blue-600 font-semibold"
+            >
+              {isPending ? <Loader className="size-3 animate-spin" /> : <BsCloudCheck className="size-4" />}
+              {isPending ? "جاري الحفظ..." : "حفظ"}
+            </Button>
+            
             {isPending && ( 
               <div className="flex items-center gap-x-2 animate-pulse text-blue-500">
-                <Loader className="size-3 animate-spin" />
                 <span className="text-[10px] font-medium">Syncing...</span>
               </div>
             )}
             {!isPending && isError && ( 
-             <></> // Error state hidden as per request
+              <Hint label="فشل الحفظ. حاول مرة أخرى." side="bottom">
+                <BsCloudSlash className="size-4 text-rose-500" />
+              </Hint>
             )}
-            {!isPending && !isError && ( 
-             <></> // Success state hidden as per request
+            {!isPending && !isError && currentStatus === "success" && ( 
+               <Hint label="تم حفظ جميع التغييرات" side="bottom">
+                <BsCloudCheck className="size-4 text-emerald-500" />
+               </Hint>
             )}
           </div>
         </div>
+        
+        {/* Mobile Save Button */}
+        <div className="lg:hidden flex items-center gap-x-1">
+             <Button 
+              size="icon" 
+              variant="ghost" 
+              onClick={() => editor?.onSave()}
+              disabled={isPending}
+              className="h-9 w-9 text-blue-600"
+            >
+              {isPending ? <Loader className="size-4 animate-spin" /> : <BsCloudCheck className="size-5" />}
+            </Button>
+        </div>
       </div>
 
-      <div className="flex-1 flex items-center justify-center gap-x-2">
-        <DropdownMenu modal={false}>
-          <DropdownMenuTrigger asChild>
-            <Button size="sm" variant="ghost" className="h-9 font-normal hover:bg-gray-100">
-              File
-              <ChevronDown className="size-4 ml-2 opacity-50" />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="start" className="w-56 shadow-xl border-gray-100">
-            <DropdownMenuItem
-              onClick={() => openFilePicker()}
-              className="flex items-center gap-x-3 py-3 cursor-pointer"
-            >
-              <div className="size-8 rounded-md bg-blue-50 flex items-center justify-center">
-                <FileIcon className="size-4 text-blue-600" />
-              </div>
-              <div className="flex flex-col">
-                <span className="font-semibold text-sm">Open</span>
-                <span className="text-[10px] text-muted-foreground line-clamp-1">Import local design</span>
-              </div>
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
+      <div className="flex-1 flex items-center justify-center gap-x-1 lg:gap-x-2">
+        <div className="hidden md:block">
+            <DropdownMenu modal={false}>
+            <DropdownMenuTrigger asChild>
+                <Button size="sm" variant="ghost" className="h-9 font-normal hover:bg-gray-100">
+                File
+                <ChevronDown className="size-4 ml-2 opacity-50" />
+                </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="start" className="w-56 shadow-xl border-gray-100">
+                <DropdownMenuItem
+                onClick={() => openFilePicker()}
+                className="flex items-center gap-x-3 py-3 cursor-pointer"
+                >
+                <div className="size-8 rounded-md bg-blue-50 flex items-center justify-center">
+                    <FileIcon className="size-4 text-blue-600" />
+                </div>
+                <div className="flex flex-col">
+                    <span className="font-semibold text-sm">Open</span>
+                    <span className="text-[10px] text-muted-foreground line-clamp-1">Import local design</span>
+                </div>
+                </DropdownMenuItem>
+            </DropdownMenuContent>
+            </DropdownMenu>
+        </div>
 
-        <Separator orientation="vertical" className="h-6 mx-1" />
+        <Separator orientation="vertical" className="hidden md:block h-6 mx-1" />
 
         <div className="flex items-center gap-x-1 bg-gray-50/50 p-1 rounded-lg border border-gray-100">
-          <Hint label="Cursor" sideOffset={10}>
+          <Hint label="التحريك" sideOffset={10}>
             <Button
               variant="ghost"
               size="icon"
@@ -162,7 +191,7 @@ export const Navbar = ({
               <MousePointerClick className="size-[18px]" />
             </Button>
           </Hint>
-          <Hint label="Undo" sideOffset={10}>
+          <Hint label="تراجع" sideOffset={10}>
             <Button
               disabled={!editor?.canUndo()}
               variant="ghost"
@@ -173,7 +202,7 @@ export const Navbar = ({
               <Undo2 className="size-[18px]" />
             </Button>
           </Hint>
-          <Hint label="Redo" sideOffset={10}>
+          <Hint label="إعادة" sideOffset={10}>
             <Button
               disabled={!editor?.canRedo()}
               variant="ghost"
@@ -186,20 +215,20 @@ export const Navbar = ({
           </Hint>
         </div>
 
-        <Separator orientation="vertical" className="h-6 mx-1" />
+        <Separator orientation="vertical" className="hidden lg:block h-6 mx-1" />
 
-        <div className="hidden md:flex items-center gap-x-2 px-3 py-1.5 rounded-full bg-indigo-50 border border-indigo-100">
+        <div className="hidden lg:flex items-center gap-x-2 px-3 py-1.5 rounded-full bg-indigo-50 border border-indigo-100">
            <div className="size-2 rounded-full bg-indigo-500 animate-pulse" />
            <span className="text-[10px] font-bold text-indigo-600 uppercase tracking-[0.1em]">Expert Engine</span>
         </div>
       </div>
 
-      <div className="flex items-center gap-x-3 ml-auto">
+      <div className="flex items-center gap-x-2 lg:gap-x-3 ml-auto shrink-0">
         <DropdownMenu modal={false}>
           <DropdownMenuTrigger asChild>
-            <Button size="sm" className="h-9 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-full px-5 transition-all active:scale-95 shadow-[0_4px_14px_0_rgba(37,99,235,0.39)]">
-              Download
-              <Download className="size-4 ml-2" />
+            <Button size="sm" className="h-9 lg:h-10 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg lg:rounded-full px-3 lg:px-5 transition-all active:scale-95 shadow-[0_4px_14px_0_rgba(37,99,235,0.39)]">
+              <span className="hidden lg:inline">Download</span>
+              <Download className="size-4 lg:ml-2" />
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end" className="w-72 p-2 shadow-2xl border-gray-100 rounded-xl overflow-hidden">
@@ -263,7 +292,7 @@ export const Navbar = ({
           </DropdownMenuContent>
         </DropdownMenu>
 
-        <Separator orientation="vertical" className="h-8" />
+        <Separator orientation="vertical" className="h-8 hidden md:block" />
         <UserButton />
       </div>
     </nav>

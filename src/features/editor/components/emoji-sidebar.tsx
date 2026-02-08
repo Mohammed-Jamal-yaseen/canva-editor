@@ -1,5 +1,4 @@
-
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { ActiveTool, Editor } from "@/features/editor/types";
 import { ToolSidebarClose } from "@/features/editor/components/tool-sidebar-close";
 import { ToolSidebarHeader } from "@/features/editor/components/tool-sidebar-header";
@@ -14,6 +13,12 @@ interface EmojiSidebarProps {
 }
 
 export const EmojiSidebar = ({ editor, activeTool, onChangeActiveTool }: EmojiSidebarProps) => {
+  const [isMounted, setIsMounted] = useState(false);
+
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
+
   const onClose = () => {
     onChangeActiveTool("select");
   };
@@ -32,11 +37,13 @@ export const EmojiSidebar = ({ editor, activeTool, onChangeActiveTool }: EmojiSi
       <ToolSidebarHeader title="Emojis" description="Add emojis to your canvas" />
       <ScrollArea>
         <div className="p-4">
-            <EmojiPicker 
-                onEmojiClick={onEmojiClick}
-                width="100%"
-                searchDisabled={false}
-            />
+            {isMounted && (
+              <EmojiPicker 
+                  onEmojiClick={onEmojiClick}
+                  width="100%"
+                  searchDisabled={false}
+              />
+            )}
         </div>
       </ScrollArea>
       <ToolSidebarClose onClick={onClose} />

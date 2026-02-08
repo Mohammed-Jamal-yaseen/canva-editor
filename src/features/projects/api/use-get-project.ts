@@ -13,17 +13,18 @@ export type ResponseType = {
 
 export const useGetProject = (id: string) => {
   const query = useQuery({
+    enabled: !!id,
     queryKey: ["project", { id }],
     queryFn: async () => {
-      // Dummy data
-      return {
-        id,
-        json: "",
-        width: 1080,
-        height: 1080,
-        name: "Untitled project",
-        updatedAt: new Date().toISOString(),
-      };
+      const response = await fetch(`/api/projects/${id}`);
+
+      if (!response.ok) {
+        throw new Error("Failed to fetch project");
+      }
+
+      const { data } = await response.json();
+
+      return data;
     },
   });
 

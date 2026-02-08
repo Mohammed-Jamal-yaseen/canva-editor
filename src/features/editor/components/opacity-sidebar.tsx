@@ -17,6 +17,8 @@ interface OpacitySidebarProps {
   onChangeActiveTool: (tool: ActiveTool) => void;
 };
 
+import { ToolSidebar } from "@/features/editor/components/tool-sidebar";
+
 export const OpacitySidebar = ({
   editor,
   activeTool,
@@ -43,28 +45,31 @@ export const OpacitySidebar = ({
   };
 
   return (
-    <aside
-      className={cn(
-        "bg-white relative border-r z-[40] w-full lg:w-[300px] h-full flex flex-col",
-        activeTool === "opacity" ? "visible" : "hidden",
-      )}
+    <ToolSidebar
+      active={activeTool === "opacity"}
+      onClose={onClose}
     >
       <ToolSidebarHeader
-        title="Opacity"
-        description="Change the opacity of the selected object"
+        title="الشفافية"
+        description="تغيير درجة شفافية العنصر المختار"
       />
       <ScrollArea>
-        <div className="p-4 space-y-4 border-b">
+        <div className="p-4 space-y-6 border-b">
           <Slider
             value={[opacity]}
             onValueChange={(values) => onChange(values[0])}
             max={1}
             min={0}
             step={0.01}
+            className="cursor-pointer"
           />
+          <div className="flex items-center justify-between text-xs font-bold text-slate-500">
+            <span>0%</span>
+            <span>{Math.round(opacity * 100)}%</span>
+            <span>100%</span>
+          </div>
         </div>
       </ScrollArea>
-      <ToolSidebarClose onClick={onClose} />
-    </aside>
+    </ToolSidebar>
   );
 };

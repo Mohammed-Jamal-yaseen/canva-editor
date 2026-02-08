@@ -10,14 +10,16 @@ export const useCreateProject = () => {
       width: number, 
       height: number 
     }) => {
-      // Dummy API call
-      console.log("Creating project", values);
-      return { 
-        data: { 
-          id: Math.random().toString(36).substring(7),
-          ...values 
-        } 
-      };
+      const response = await fetch("/api/projects", {
+        method: "POST",
+        body: JSON.stringify(values),
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to create project");
+      }
+
+      return await response.json();
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["projects"] });

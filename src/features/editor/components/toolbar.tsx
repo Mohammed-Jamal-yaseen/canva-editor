@@ -22,8 +22,15 @@ import {
   AlignVerticalJustifyCenter,
   AlignVerticalJustifyEnd,
   AlignVerticalJustifyStart,
-  LayoutGrid
+  LayoutGrid,
+  Lock,
+  Unlock,
+  AlignHorizontalDistributeCenter,
+  AlignVerticalDistributeCenter,
+  MoreHorizontal,
+  Focus
 } from "lucide-react";
+
 
 import { isTextType } from "@/features/editor/utils";
 import { FontSizeInput } from "@/features/editor/components/font-size-input";
@@ -77,6 +84,9 @@ export const Toolbar = ({
   const isText = isTextType(selectedObjectType);
   const isImage = selectedObjectType === "image";
 
+  // Check if object is locked
+  const isLocked = (selectedObject as any)?.get("locked") === true;
+
   const onChangeFontSize = (value: number) => {
     if (!selectedObject) {
       return;
@@ -106,10 +116,10 @@ export const Toolbar = ({
       return;
     }
 
-    const newValue = properties.fontWeight > 500 ? 500 : 700;
+    const newValue = properties.fontWeight > 500 ? 400 : 700;
 
     editor?.changeFontWeight(newValue);
-    setProperties((current) => ({
+    setProperties((current: any) => ({
       ...current,
       fontWeight: newValue,
     }));
@@ -124,7 +134,7 @@ export const Toolbar = ({
     const newValue = isItalic ? "normal" : "italic";
 
     editor?.changeFontStyle(newValue);
-    setProperties((current) => ({
+    setProperties((current: any) => ({
       ...current,
       fontStyle: newValue,
     }));
@@ -138,7 +148,7 @@ export const Toolbar = ({
     const newValue = properties.fontLinethrough ? false : true;
 
     editor?.changeFontLinethrough(newValue);
-    setProperties((current) => ({
+    setProperties((current: any) => ({
       ...current,
       fontLinethrough: newValue,
     }));
@@ -152,23 +162,31 @@ export const Toolbar = ({
     const newValue = properties.fontUnderline ? false : true;
 
     editor?.changeFontUnderline(newValue);
-    setProperties((current) => ({
+    setProperties((current: any) => ({
       ...current,
       fontUnderline: newValue,
     }));
   };
 
+  const toggleLock = () => {
+    if (!selectedObject) {
+      return;
+    }
+
+    editor?.toggleLock();
+  };
+
   if (editor?.selectedObjects.length === 0) {
     return (
-      <div className="shrink-0 h-[56px] border-b bg-white w-full flex items-center overflow-x-auto z-[49] p-2 gap-x-2" />
+      <div className="shrink-0 h-[56px] border-b bg-white w-full flex items-center overflow-x-auto scrollbar-hide z-[49] p-2 gap-x-2" />
     );
   }
 
   return (
-    <div className="shrink-0 h-[56px] border-b bg-white w-full flex items-center overflow-x-auto z-[49] p-2 gap-x-2">
+    <div className="shrink-0 h-[56px] border-b bg-white w-full flex items-center overflow-x-auto scrollbar-hide z-[49] p-2 gap-x-2">
       {!isImage && (
         <div className="flex items-center h-full justify-center">
-          <Hint label="Color" side="bottom" sideOffset={5}>
+          <Hint label="اللون" side="bottom" sideOffset={5}>
             <Button
               onClick={() => onChangeActiveTool("fill")}
               size="icon"
@@ -187,7 +205,7 @@ export const Toolbar = ({
       )}
       {!isText && (
         <div className="flex items-center h-full justify-center">
-          <Hint label="Stroke color" side="bottom" sideOffset={5}>
+          <Hint label="لون الإطار" side="bottom" sideOffset={5}>
             <Button
               onClick={() => onChangeActiveTool("stroke-color")}
               size="icon"
@@ -206,7 +224,7 @@ export const Toolbar = ({
       )}
       {!isText && (
         <div className="flex items-center h-full justify-center">
-          <Hint label="Stroke width" side="bottom" sideOffset={5}>
+          <Hint label="سُمك الإطار" side="bottom" sideOffset={5}>
             <Button
               onClick={() => onChangeActiveTool("stroke-width")}
               size="icon"
@@ -222,7 +240,7 @@ export const Toolbar = ({
       )}
       {isText && (
         <div className="flex items-center h-full justify-center">
-          <Hint label="Font" side="bottom" sideOffset={5}>
+          <Hint label="الخط" side="bottom" sideOffset={5}>
             <Button
               onClick={() => onChangeActiveTool("font")}
               size="icon"
@@ -242,7 +260,7 @@ export const Toolbar = ({
       )}
       {isText && (
         <div className="flex items-center h-full justify-center">
-          <Hint label="Bold" side="bottom" sideOffset={5}>
+          <Hint label="عريض" side="bottom" sideOffset={5}>
             <Button
               onClick={toggleBold}
               size="icon"
@@ -258,7 +276,7 @@ export const Toolbar = ({
       )}
       {isText && (
         <div className="flex items-center h-full justify-center">
-          <Hint label="Italic" side="bottom" sideOffset={5}>
+          <Hint label="مائل" side="bottom" sideOffset={5}>
             <Button
               onClick={toggleItalic}
               size="icon"
@@ -274,7 +292,7 @@ export const Toolbar = ({
       )}
       {isText && (
         <div className="flex items-center h-full justify-center">
-          <Hint label="Underline" side="bottom" sideOffset={5}>
+          <Hint label="تحته خط" side="bottom" sideOffset={5}>
             <Button
               onClick={toggleUnderline}
               size="icon"
@@ -290,7 +308,7 @@ export const Toolbar = ({
       )}
       {isText && (
         <div className="flex items-center h-full justify-center">
-          <Hint label="Strike" side="bottom" sideOffset={5}>
+          <Hint label="خط في الوسط" side="bottom" sideOffset={5}>
             <Button
               onClick={toggleLinethrough}
               size="icon"
@@ -306,7 +324,7 @@ export const Toolbar = ({
       )}
       {isText && (
         <div className="flex items-center h-full justify-center">
-          <Hint label="Align left" side="bottom" sideOffset={5}>
+          <Hint label="محاذاة لليسار" side="bottom" sideOffset={5}>
             <Button
               onClick={() => onChangeTextAlign("left")}
               size="icon"
@@ -322,7 +340,7 @@ export const Toolbar = ({
       )}
       {isText && (
         <div className="flex items-center h-full justify-center">
-          <Hint label="Align center" side="bottom" sideOffset={5}>
+          <Hint label="محاذاة للوسط" side="bottom" sideOffset={5}>
             <Button
               onClick={() => onChangeTextAlign("center")}
               size="icon"
@@ -338,7 +356,7 @@ export const Toolbar = ({
       )}
       {isText && (
         <div className="flex items-center h-full justify-center">
-          <Hint label="Align right" side="bottom" sideOffset={5}>
+          <Hint label="محاذاة لليمين" side="bottom" sideOffset={5}>
             <Button
               onClick={() => onChangeTextAlign("right")}
               size="icon"
@@ -354,15 +372,15 @@ export const Toolbar = ({
       )}
       {isText && (
         <div className="flex items-center h-full justify-center">
-         <FontSizeInput
+          <FontSizeInput
             value={properties.fontSize}
             onChange={onChangeFontSize}
-         />
+          />
         </div>
       )}
       {isImage && (
         <div className="flex items-center h-full justify-center">
-          <Hint label="Filters" side="bottom" sideOffset={5}>
+          <Hint label="الفلاتر" side="bottom" sideOffset={5}>
             <Button
               onClick={() => onChangeActiveTool("filter")}
               size="icon"
@@ -378,7 +396,7 @@ export const Toolbar = ({
       )}
       {isImage && (
         <div className="flex items-center h-full justify-center">
-          <Hint label="Remove background" side="bottom" sideOffset={5}>
+          <Hint label="إزالة الخلفية" side="bottom" sideOffset={5}>
             <Button
               onClick={() => onChangeActiveTool("remove-bg")}
               size="icon"
@@ -393,7 +411,7 @@ export const Toolbar = ({
         </div>
       )}
       <div className="flex items-center h-full justify-center">
-        <Hint label="Bring forward" side="bottom" sideOffset={5}>
+        <Hint label="تقديم للأمام" side="bottom" sideOffset={5}>
           <Button
             onClick={() => editor?.bringForward()}
             size="icon"
@@ -404,7 +422,7 @@ export const Toolbar = ({
         </Hint>
       </div>
       <div className="flex items-center h-full justify-center">
-        <Hint label="Send backwards" side="bottom" sideOffset={5}>
+        <Hint label="إرسال للخلف" side="bottom" sideOffset={5}>
           <Button
             onClick={() => editor?.sendBackwards()}
             size="icon"
@@ -415,7 +433,7 @@ export const Toolbar = ({
         </Hint>
       </div>
       <div className="flex items-center h-full justify-center">
-        <Hint label="Opacity" side="bottom" sideOffset={5}>
+        <Hint label="الشفافية" side="bottom" sideOffset={5}>
           <Button
             onClick={() => onChangeActiveTool("opacity")}
             size="icon"
@@ -427,7 +445,7 @@ export const Toolbar = ({
         </Hint>
       </div>
       <div className="flex items-center h-full justify-center">
-        <Hint label="Duplicate" side="bottom" sideOffset={5}>
+        <Hint label="تكرار" side="bottom" sideOffset={5}>
           <Button
             onClick={() => {
               editor?.onCopy();
@@ -441,7 +459,32 @@ export const Toolbar = ({
         </Hint>
       </div>
       <div className="flex items-center h-full justify-center">
-        <Hint label="Delete" side="bottom" sideOffset={5}>
+        <Hint label={isLocked ? "فك القفل" : "قفل"} side="bottom" sideOffset={5}>
+          <Button
+            onClick={() => isLocked ? editor?.unlock() : editor?.lock()}
+            size="icon"
+            variant="ghost"
+            className={cn(isLocked && "bg-gray-100")}
+          >
+            {isLocked ? <Unlock className="size-4" /> : <Lock className="size-4" />}
+          </Button>
+        </Hint>
+      </div>
+
+      <div className="flex items-center h-full justify-center">
+        <Hint label="تركيز" side="bottom" sideOffset={5}>
+          <Button
+            onClick={() => editor?.zoomToSelected()}
+            size="icon"
+            variant="ghost"
+          >
+            <Focus className="size-4" />
+          </Button>
+        </Hint>
+      </div>
+
+      <div className="flex items-center h-full justify-center">
+        <Hint label="حذف" side="bottom" sideOffset={5}>
           <Button
             onClick={() => editor?.delete()}
             size="icon"
@@ -458,42 +501,42 @@ export const Toolbar = ({
 
       {/* Object Alignment */}
       <div className="flex items-center h-full justify-center">
-        <Hint label="Align Left" side="bottom" sideOffset={5}>
+        <Hint label="محاذاة لليسار" side="bottom" sideOffset={5}>
           <Button onClick={() => editor?.align("left")} size="icon" variant="ghost">
             <AlignLeft className="size-4" />
           </Button>
         </Hint>
       </div>
       <div className="flex items-center h-full justify-center">
-        <Hint label="Align Center" side="bottom" sideOffset={5}>
+        <Hint label="محاذاة للوسط" side="bottom" sideOffset={5}>
           <Button onClick={() => editor?.align("center")} size="icon" variant="ghost">
              <AlignCenter className="size-4" />
           </Button>
         </Hint>
       </div>
       <div className="flex items-center h-full justify-center">
-        <Hint label="Align Right" side="bottom" sideOffset={5}>
+        <Hint label="محاذاة لليمين" side="bottom" sideOffset={5}>
            <Button onClick={() => editor?.align("right")} size="icon" variant="ghost">
              <AlignRight className="size-4" />
            </Button>
         </Hint>
       </div>
       <div className="flex items-center h-full justify-center">
-        <Hint label="Align Top" side="bottom" sideOffset={5}>
+        <Hint label="محاذاة للأعلى" side="bottom" sideOffset={5}>
            <Button onClick={() => editor?.align("top")} size="icon" variant="ghost">
              <AlignVerticalJustifyStart className="size-4" />
            </Button>
         </Hint>
       </div>
       <div className="flex items-center h-full justify-center">
-        <Hint label="Align Middle" side="bottom" sideOffset={5}>
+        <Hint label="محاذاة للمنتصف" side="bottom" sideOffset={5}>
            <Button onClick={() => editor?.align("middle")} size="icon" variant="ghost">
              <AlignVerticalJustifyCenter className="size-4" />
            </Button>
         </Hint>
       </div>
       <div className="flex items-center h-full justify-center">
-        <Hint label="Align Bottom" side="bottom" sideOffset={5}>
+        <Hint label="محاذاة للأسفل" side="bottom" sideOffset={5}>
            <Button onClick={() => editor?.align("bottom")} size="icon" variant="ghost">
              <AlignVerticalJustifyEnd className="size-4" />
            </Button>
@@ -503,16 +546,16 @@ export const Toolbar = ({
       {editor?.selectedObjects && editor.selectedObjects.length > 2 && (
         <>
             <div className="flex items-center h-full justify-center">
-                <Hint label="Distribute Horizontal" side="bottom" sideOffset={5}>
+                <Hint label="توزيع أفقي" side="bottom" sideOffset={5}>
                 <Button onClick={() => editor?.align("distribute-horizontal")} size="icon" variant="ghost">
-                    <AlignLeft className="size-4 rotate-90" />
+                    <AlignHorizontalDistributeCenter className="size-4" />
                 </Button>
                 </Hint>
             </div>
             <div className="flex items-center h-full justify-center">
-                <Hint label="Distribute Vertical" side="bottom" sideOffset={5}>
+                <Hint label="توزيع رأسي" side="bottom" sideOffset={5}>
                 <Button onClick={() => editor?.align("distribute-vertical")} size="icon" variant="ghost">
-                    <AlignLeft className="size-4" />
+                    <AlignVerticalDistributeCenter className="size-4" />
                 </Button>
                 </Hint>
             </div>
@@ -522,18 +565,18 @@ export const Toolbar = ({
        {/* Grouping */}
        {editor?.selectedObjects && editor.selectedObjects.length > 1 && (
         <div className="flex items-center h-full justify-center">
-          <Hint label="Group" side="bottom" sideOffset={5}>
+          <Hint label="تجميع" side="bottom" sideOffset={5}>
             <Button onClick={() => editor?.groupObjects()} size="icon" variant="ghost">
-              <span className="text-xs font-semibold">Group</span>
+              <span className="text-xs font-semibold">تجميع</span>
             </Button>
           </Hint>
         </div>
       )}
       {selectedObjectType === "group" && (
         <div className="flex items-center h-full justify-center">
-          <Hint label="Ungroup" side="bottom" sideOffset={5}>
+          <Hint label="فك التجميع" side="bottom" sideOffset={5}>
             <Button onClick={() => editor?.ungroupObjects()} size="icon" variant="ghost">
-               <span className="text-xs font-semibold">Ungroup</span>
+               <span className="text-xs font-semibold">فك تجميع</span>
             </Button>
           </Hint>
         </div>

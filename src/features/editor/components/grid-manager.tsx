@@ -1,0 +1,110 @@
+import { Plus } from "lucide-react";
+import { Editor } from "@/features/editor/types";
+import { cn } from "@/shared/lib/utils";
+import { Button } from "@/shared/components/ui/button";
+
+interface GridManagerProps {
+  editor: Editor | undefined;
+  onAddPage: () => void;
+  onSelectPage: (index: number) => void;
+};
+
+export const GridManager = ({
+  editor,
+  onAddPage,
+  onSelectPage,
+}: GridManagerProps) => {
+  if (!editor) return null;
+
+  return (
+    <div className="w-full bg-white flex-1 overflow-auto pb-20 lg:pb-0">
+      {/* Top Bar with Page Thumbnails - Canva Style */}
+      <div className="border-b bg-white sticky top-0 z-10 shadow-sm">
+        <div className="px-4 py-3 flex items-center gap-x-3 overflow-x-auto">
+          <span className="text-xs font-bold text-slate-600 whitespace-nowrap">الصفحات:</span>
+          
+          <div className="flex items-center gap-x-2">
+            {Array.from({ length: editor.totalPages }).map((_, i) => (
+              <button
+                key={i}
+                onClick={() => onSelectPage(i)}
+                className={cn(
+                  "relative flex-shrink-0 w-16 h-20 rounded-lg border-2 transition-all overflow-hidden group",
+                  editor.currentPage === i 
+                    ? "border-purple-600 ring-2 ring-purple-100 shadow-md" 
+                    : "border-slate-200 hover:border-purple-300 hover:shadow-sm"
+                )}
+              >
+                <div className="w-full h-full bg-slate-50 flex flex-col items-center justify-center">
+                  <span className="text-[10px] font-bold text-slate-400">صفحة</span>
+                  <span className="text-xs font-bold text-slate-600">{i + 1}</span>
+                </div>
+                {editor.currentPage === i && (
+                  <div className="absolute inset-0 bg-purple-600/5 pointer-events-none" />
+                )}
+              </button>
+            ))}
+            
+            <button
+              onClick={onAddPage}
+              className="flex-shrink-0 w-16 h-20 rounded-lg border-2 border-dashed border-slate-300 hover:border-purple-400 hover:bg-purple-50/50 transition-all flex flex-col items-center justify-center gap-y-1 text-slate-400 hover:text-purple-600"
+            >
+              <Plus className="size-5" />
+              <span className="text-[9px] font-bold">جديد</span>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      {/* Main Grid Content Area */}
+      <div className="p-4 lg:p-8 bg-slate-50">
+        <div className="max-w-7xl mx-auto">
+          <div className="text-center mb-6 lg:mb-8">
+            <h2 className="text-xl lg:text-2xl font-bold text-slate-800 mb-2">اختر صفحة للتحرير</h2>
+            <p className="text-xs lg:text-sm text-slate-500">انقر على أي صفحة للبدء في التحرير</p>
+          </div>
+          
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4 lg:gap-6">
+            {Array.from({ length: editor.totalPages }).map((_, i) => (
+              <div key={i} className="flex flex-col gap-y-2">
+                <button
+                  onClick={() => onSelectPage(i)}
+                  className={cn(
+                    "aspect-[3/4] bg-white rounded-xl shadow-sm border-2 transition-all overflow-hidden flex items-center justify-center relative group hover:shadow-lg",
+                    editor.currentPage === i 
+                      ? "border-purple-600 ring-4 ring-purple-100 shadow-lg" 
+                      : "border-slate-200 hover:border-purple-300"
+                  )}
+                >
+                  <div className="w-full h-full bg-gradient-to-br from-slate-50 to-slate-100 flex items-center justify-center">
+                    <span className="text-4xl font-bold text-slate-300">{i + 1}</span>
+                  </div>
+                  
+                  {editor.currentPage === i && (
+                    <div className="absolute top-2 right-2 bg-purple-600 text-white text-[9px] font-bold px-2 py-0.5 rounded-full">
+                      الحالي
+                    </div>
+                  )}
+                </button>
+                <span className="text-center text-xs font-semibold text-slate-600">صفحة {i + 1}</span>
+              </div>
+            ))}
+            
+            <div className="flex flex-col gap-y-2">
+              <button
+                onClick={onAddPage}
+                className="aspect-[3/4] bg-slate-100/50 rounded-xl border-2 border-dashed border-slate-300 flex items-center justify-center hover:bg-slate-100 hover:border-purple-400 transition-all group"
+              >
+                <div className="flex flex-col items-center gap-y-2">
+                  <Plus className="size-10 text-slate-400 group-hover:text-purple-600 transition-colors" />
+                  <span className="text-xs font-bold text-slate-400 group-hover:text-purple-600">إضافة صفحة</span>
+                </div>
+              </button>
+              <span className="text-center text-xs font-semibold text-slate-400">جديد</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};

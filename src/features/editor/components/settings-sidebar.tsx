@@ -17,6 +17,8 @@ interface SettingsSidebarProps {
   onChangeActiveTool: (tool: ActiveTool) => void;
 };
 
+import { ToolSidebar } from "@/features/editor/components/tool-sidebar";
+
 export const SettingsSidebar = ({
   editor,
   activeTool,
@@ -26,7 +28,7 @@ export const SettingsSidebar = ({
 
   const initialWidth = useMemo(() => `${workspace?.width ?? 0}`, [workspace]);
   const initialHeight = useMemo(() => `${workspace?.height ?? 0}`, [workspace]);
-  const initialBackground = useMemo(() => workspace?.fill ?? "#ffffff", [workspace]);
+  const initialBackground = useMemo(() => (workspace as any)?.fill ?? "#ffffff", [workspace]);
 
   const [width, setWidth] = useState(initialWidth);
   const [height, setHeight] = useState(initialHeight);
@@ -36,7 +38,6 @@ export const SettingsSidebar = ({
     setWidth(initialWidth);
     setHeight(initialHeight);
     setBackground(initialBackground);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, 
   [
     initialWidth,
@@ -65,24 +66,22 @@ export const SettingsSidebar = ({
   };
 
   return (
-    <aside
-      className={cn(
-        "bg-white relative border-r z-[40] w-full lg:w-[300px] h-full flex flex-col",
-        activeTool === "settings" ? "visible" : "hidden",
-      )}
+    <ToolSidebar
+      active={activeTool === "settings"}
+      onClose={onClose}
     >
       <ToolSidebarHeader
-        title="Settings"
-        description="Change the look of your workspace"
+        title="الإعدادات"
+        description="تغيير مظهر مساحة العمل الخاصة بك"
       />
       <ScrollArea>
         <form className="space-y-4 p-4" onSubmit={onSubmit}>
           <div className="space-y-2">
             <Label>
-              Height
+              الارتفاع
             </Label>
             <Input
-              placeholder="Height"
+              placeholder="الارتفاع"
               value={height}
               type="number"
               onChange={(e: React.ChangeEvent<HTMLInputElement>) => changeHeight(e.target.value)}
@@ -90,27 +89,26 @@ export const SettingsSidebar = ({
           </div>
           <div className="space-y-2">
             <Label>
-              Width
+              العرض
             </Label>
             <Input
-              placeholder="Width"
+              placeholder="العرض"
               value={width}
               type="number"
               onChange={(e: React.ChangeEvent<HTMLInputElement>) => changeWidth(e.target.value)}
             />
           </div>
           <Button type="submit" className="w-full">
-            Resize
+            تغيير الحجم
           </Button>
         </form>
-        <div className="p-4">
+        <div className="p-4 border-t">
           <ColorPicker
-            value={background as string} // We dont support gradients or patterns
+            value={background as string}
             onChange={changeBackground}
           />
         </div>
       </ScrollArea>
-      <ToolSidebarClose onClick={onClose} />
-    </aside>
+    </ToolSidebar>
   );
 };

@@ -6,8 +6,15 @@ export const useDuplicateProject = () => {
 
   return useMutation({
     mutationFn: async ({ id }: { id: string }) => {
-      console.log("Duplicating project", id);
-      return { id };
+      const response = await fetch(`/api/projects/${id}/duplicate`, {
+        method: "POST",
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to duplicate project");
+      }
+
+      return await response.json();
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["projects"] });
