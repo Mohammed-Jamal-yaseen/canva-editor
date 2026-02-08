@@ -27,19 +27,20 @@ export const useBgRemoval = () => {
       }
 
       const blob = await removeBackground(input, {
-        device: "gpu", 
+        device: undefined, 
         model: "isnet", 
         debug: true,
         publicPath: "https://cdn.jsdelivr.net/npm/@imgly/background-removal-data@1.7.0/dist/",
         progress: (key, current, total) => {
-          // You can track progress here without freezing
+          // Progress tracking can be implemented here if needed
         },
       });
 
       return URL.createObjectURL(blob);
     } catch (e: any) {
       console.error("BG_REMOVAL_ENGINE_ERROR:", e);
-      const message = e?.message || "Background removal failed. Check browser compatibility.";
+      // More descriptive error messages for Wasm/Service worker failures
+      const message = e?.message || "Background removal failed. This may be due to browser limitations or blocked assets.";
       setError(message);
       throw e;
     } finally {
