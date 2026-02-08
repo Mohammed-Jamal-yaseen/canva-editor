@@ -77,12 +77,18 @@ importers:
       emoji-picker-react:
         specifier: ^4.17.4
         version: 4.17.4(react@19.2.3)
+      fabric:
+        specifier: ^7.1.0
+        version: 7.1.0
       lodash.debounce:
         specifier: ^4.0.8
         version: 4.0.8
       lucide-react:
         specifier: ^0.563.0
         version: 0.563.0(react@19.2.3)
+      material-colors:
+        specifier: ^1.2.6
+        version: 1.2.6
       next:
         specifier: 16.1.6
         version: 16.1.6(@babel/core@7.29.0)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)
@@ -183,21 +189,12 @@ importers:
       '@types/ws':
         specifier: ^8.18.1
         version: 8.18.1
-      add:
-        specifier: ^2.0.6
-        version: 2.0.6
       eslint:
         specifier: ^9
         version: 9.39.2(jiti@2.6.1)
       eslint-config-next:
         specifier: 16.1.6
         version: 16.1.6(@typescript-eslint/parser@8.54.0(eslint@9.39.2(jiti@2.6.1))(typescript@5.9.3))(eslint@9.39.2(jiti@2.6.1))(typescript@5.9.3)
-      fabric:
-        specifier: ^7.1.0
-        version: 7.1.0
-      material-colors:
-        specifier: ^1.2.6
-        version: 1.2.6
       pnpm:
         specifier: ^10.28.2
         version: 10.28.2
@@ -1639,9 +1636,6 @@ packages:
     resolution: {integrity: sha512-NZyJarBfL7nWwIq+FDL6Zp/yHEhePMNnnJ0y3qfieCrmNvYct8uvtiV41UvlSe6apAfk0fY1FbWx+NwfmpvtTg==}
     engines: {node: '>=0.4.0'}
     hasBin: true
-
-  add@2.0.6:
-    resolution: {integrity: sha512-j5QzrmsokwWWp6kUcJQySpbG+xfOBqqKnup3OIk1pz+kB/80SLorZ9V8zHFLO92Lcd+hbvq8bT+zOGoPkmBV0Q==}
 
   agent-base@7.1.4:
     resolution: {integrity: sha512-MnA+YT8fwfJPgBx3m60MNqakm30XOkyIoH1y6huTQvC0PwZG7ki8NacLBcrPbNoo8vEZy7Jpuk7+jMO+CUovTQ==}
@@ -5297,8 +5291,6 @@ snapshots:
       acorn: 8.15.0
 
   acorn@8.15.0: {}
-
-  add@2.0.6: {}
 
   agent-base@7.1.4:
     optional: true
