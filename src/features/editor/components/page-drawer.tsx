@@ -9,13 +9,13 @@ import {
   Settings, 
   FileText,
   X,
-  Palette
+  Palette,
+  ClipboardPaste
 } from "lucide-react";
 import { Editor } from "@/features/editor/types";
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle, DrawerTrigger } from "@/shared/components/ui/drawer";
 import { Button } from "@/shared/components/ui/button";
 import { Separator } from "@/shared/components/ui/separator";
-import { cn } from "@/shared/lib/utils";
 
 interface PageDrawerProps {
   editor: Editor | undefined;
@@ -101,19 +101,37 @@ export const PageDrawer = ({
 
         {/* Action Grid */}
         <div className="p-6 grid grid-cols-4 gap-4">
-            <button className="flex flex-col items-center gap-y-2 group">
+            <button 
+                onClick={() => {
+                   editor.onCopy();
+                   onOpenChange(false);
+                }}
+                className="flex flex-col items-center gap-y-2 group"
+            >
                 <div className="size-12 rounded-xl bg-slate-50 flex items-center justify-center group-hover:bg-slate-100 transition-colors border">
                     <Copy className="size-6 text-slate-600" />
                 </div>
                 <span className="text-[11px] font-bold">نسخ</span>
             </button>
-            <button className="flex flex-col items-center gap-y-2 group">
+            <button 
+                onClick={() => {
+                   editor.onPaste();
+                   onOpenChange(false);
+                }}
+                className="flex flex-col items-center gap-y-2 group"
+            >
                 <div className="size-12 rounded-xl bg-slate-50 flex items-center justify-center group-hover:bg-slate-100 transition-colors border">
-                    <CopyPlus className="size-6 text-slate-600" />
+                    <ClipboardPaste className="size-6 text-slate-600" />
                 </div>
                 <span className="text-[11px] font-bold">لصق</span>
             </button>
-            <button className="flex flex-col items-center gap-y-2 group">
+            <button 
+                onClick={() => {
+                   editor.duplicatePage();
+                   onOpenChange(false);
+                }}
+                className="flex flex-col items-center gap-y-2 group" // Added key to trigger re-render if needed or just handled by React
+            >
                 <div className="size-12 rounded-xl bg-slate-50 flex items-center justify-center group-hover:bg-slate-100 transition-colors border">
                     <CopyPlus className="size-6 text-slate-600" />
                 </div>

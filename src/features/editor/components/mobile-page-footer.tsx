@@ -33,16 +33,7 @@ export const MobilePageFooter = ({
       </button>
 
       <button 
-        onClick={() => {
-          // Duplicate current page
-          const workspace = editor?.getWorkspace();
-          if (workspace) {
-            editor?.addPage({ 
-              width: workspace.width || 800, 
-              height: workspace.height || 1000 
-            });
-          }
-        }}
+        onClick={() => editor?.duplicatePage()}
         className="flex flex-col items-center gap-y-1 group"
       >
         <CopyPlus className="size-5 text-slate-600" />

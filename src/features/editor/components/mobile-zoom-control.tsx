@@ -11,7 +11,7 @@ export const MobileZoomControl = ({ editor, onOpenPageDrawer }: MobileZoomContro
   if (!editor) return null;
 
   return (
-    <div className="fixed bottom-24 right-4 z-50 lg:hidden flex flex-col gap-y-2 bg-white rounded-2xl shadow-2xl border p-2">
+    <div className="fixed bottom-32 right-4 z-50 lg:hidden flex flex-col gap-y-2 bg-white rounded-2xl shadow-2xl border p-2">
       <Button
         variant="ghost"
         size="icon"

@@ -293,6 +293,12 @@ export const PAGE_TYPES = [
   { label: "نيوشل ميديا (Social Media)", width: 1080, height: 1080, icon: "SocialMedia" },
   { label: "فيديو (Video)", width: 1920, height: 1080, icon: "Video" },
   { label: "موقع إلكتروني (Websites)", width: 1366, height: 768, icon: "Websites" },
+  { label: "Instagram Post", width: 1080, height: 1080, icon: "SocialMedia" },
+  { label: "Instagram Story", width: 1080, height: 1920, icon: "SocialMedia" },
+  { label: "Facebook Post", width: 1200, height: 630, icon: "SocialMedia" },
+  { label: "Facebook Cover", width: 820, height: 312, icon: "SocialMedia" },
+  { label: "A4 Document", width: 595, height: 842, icon: "Doc" },
+  { label: "YouTube Thumbnail", width: 1280, height: 720, icon: "Video" },
 ];
 
 export interface Editor {
@@ -306,6 +312,8 @@ export interface Editor {
   canUndo: () => boolean;
   canRedo: () => boolean;
   autoZoom: () => void;
+  copy: () => void;
+  paste: () => void;
   zoomIn: () => void;
   zoomOut: () => void;
   setZoom: (value: number) => void;
@@ -372,6 +380,7 @@ export interface Editor {
   deletePage: () => void;
   nextPage: () => void;
   prevPage: () => void;
+  duplicatePage: () => void;
   goToPage: (index: number) => void;
   zoom: number;
   currentPage: number;

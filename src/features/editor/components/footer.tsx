@@ -146,7 +146,7 @@ export const Footer = ({
             <div className="flex items-center gap-x-2 min-w-[120px]">
                 <Slider 
                     value={[zoomPercent]}
-                    min={10}
+                    min={20}
                     max={500}
                     step={1}
                     onValueChange={handleZoomChange}
