@@ -146,7 +146,7 @@ export const EditorCanvas = ({
         <button
             onClick={() => onChangeActiveTool("templates")}
             className={cn(
-                "lg:hidden fixed bottom-24 left-6 size-12 rounded-xl bg-gradient-to-tr from-purple-600 to-blue-600 text-white shadow-xl flex items-center justify-center z-[51] active:scale-95 transition-all duration-300",
+                "lg:hidden fixed bottom-32 left-6 size-12 rounded-xl bg-gradient-to-tr from-purple-600 to-blue-600 text-white shadow-xl flex items-center justify-center z-[51] active:scale-95 transition-all duration-300",
                 activeTool !== "select" && "opacity-0 invisible translate-y-10"
             )}
         >
