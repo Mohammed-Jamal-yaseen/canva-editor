@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { unsplash } from "@/shared/lib/unsplash";
 
-const DEFAULT_COUNT = 50;
+const DEFAULT_COUNT = 30;
 const DEFAULT_COLLECTION_IDS = ["317099"]; 
 
 export async function GET(req: Request) {
@@ -28,22 +28,21 @@ export async function GET(req: Request) {
         images = result.response.results;
       }
     } else {
-      // 2. Random/Default Logic
-      const result = await unsplash.photos.getRandom({
-        collectionIds: DEFAULT_COLLECTION_IDS,
-        count: DEFAULT_COUNT,
+      // 2. Default Logic - Fetch curated photos using a search for "design"
+      // Using search is often more reliable and relevant than completely random photos
+      const result = await unsplash.search.getPhotos({
+        query: "minimalist background",
+        page: 1,
+        perPage: DEFAULT_COUNT,
       });
 
       if (result.errors) {
-        console.error("[UNSPLASH_RANDOM_ERROR]", result.errors[0]);
+        console.error("[UNSPLASH_DEFAULT_ERROR]", result.errors[0]);
         return NextResponse.json({ data: [], error: result.errors[0] }, { status: 400 });
       }
 
       if (result.response) {
-        // getRandom can return an array or a single object
-        images = Array.isArray(result.response) 
-          ? result.response 
-          : [result.response];
+        images = result.response.results;
       }
     }
 
@@ -52,7 +51,9 @@ export async function GET(req: Request) {
 
   } catch (error) {
     console.error("[IMAGES_GET_CRASH]", error);
-    // Return empty data instead of a 500 to keep the frontend from crashing
-    return NextResponse.json({ data: [], error: "Internal Server Error" }, { status: 200 });
+    return NextResponse.json({ 
+      data: [], 
+      error: (error as Error)?.message || "Internal Server Error" 
+    }, { status: 500 });
   }
 }

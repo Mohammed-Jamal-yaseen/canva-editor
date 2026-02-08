@@ -23,7 +23,7 @@ export const ImageSidebar = ({ editor, activeTool, onChangeActiveTool }: ImageSi
   const [isUploading, setIsUploading] = useState(false);
   const [uploadProgress, setUploadProgress] = useState(0);
   const [search, setSearch] = useState("");
-  const { data, isLoading, isError } = useGetImages(search);
+  const { data, isLoading, isError, error } = useGetImages(search);
 
   const onClose = () => {
     onChangeActiveTool("select");
@@ -111,7 +111,9 @@ export const ImageSidebar = ({ editor, activeTool, onChangeActiveTool }: ImageSi
       {isError && (
         <div className="flex flex-col gap-y-4 items-center justify-center flex-1">
           <AlertTriangle className="size-4 text-muted-foreground" />
-          <p className="text-muted-foreground text-xs">Failed to fetch images</p>
+          <p className="text-muted-foreground text-xs text-center px-4">
+             {(error as Error)?.message || "Failed to fetch images"}
+          </p>
         </div>
       )}
       <ScrollArea>

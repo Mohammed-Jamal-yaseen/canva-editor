@@ -7,7 +7,8 @@ export const useGetImages = (query?: string) => {
 
 
       if (!response.ok) {
-        throw new Error("Failed to fetch images");
+        const errorData = await response.json().catch(() => ({}));
+        throw new Error(errorData.error || "Failed to fetch images");
       }
 
       const { data } = await response.json();
