@@ -11,20 +11,20 @@ export const MobileZoomControl = ({ editor, onOpenPageDrawer }: MobileZoomContro
   if (!editor) return null;
 
   return (
-    <div className="fixed bottom-32 right-4 z-50 lg:hidden flex flex-col gap-y-2 bg-white rounded-2xl shadow-2xl border p-2">
+    <div className="fixed bottom-32 right-4 z-50 lg:hidden flex flex-col gap-y-2 bg-white dark:bg-slate-800 rounded-2xl shadow-2xl border dark:border-slate-700 p-2">
       <Button
         variant="ghost"
         size="icon"
-        className="h-10 w-10 rounded-xl hover:bg-slate-100"
+        className="h-10 w-10 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-700"
         onClick={onOpenPageDrawer}
       >
-        <Layers className="size-5 text-slate-600" />
+        <Layers className="size-5 text-slate-600 dark:text-slate-300" />
       </Button>
-      <div className="h-[1px] bg-slate-100 w-full" />
+      <div className="h-[1px] bg-slate-100 dark:bg-slate-700 w-full" />
       <Button
         variant="ghost"
         size="icon"
-        className="h-10 w-10 rounded-xl hover:bg-slate-100"
+        className="h-10 w-10 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-700"
         onClick={() => editor.zoomIn()}
       >
         <ZoomIn className="size-5" />
@@ -32,7 +32,7 @@ export const MobileZoomControl = ({ editor, onOpenPageDrawer }: MobileZoomContro
       <Button
         variant="ghost"
         size="icon"
-        className="h-10 w-10 rounded-xl hover:bg-slate-100"
+        className="h-10 w-10 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-700"
         onClick={() => editor.zoomOut()}
       >
         <ZoomOut className="size-5" />
@@ -40,7 +40,7 @@ export const MobileZoomControl = ({ editor, onOpenPageDrawer }: MobileZoomContro
       <Button
         variant="ghost"
         size="icon"
-        className="h-10 w-10 rounded-xl hover:bg-slate-100"
+        className="h-10 w-10 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-700"
         onClick={() => editor.autoZoom()}
       >
         <Maximize2 className="size-4" />

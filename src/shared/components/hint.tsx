@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import {
   Tooltip,
   TooltipContent,
@@ -22,7 +23,17 @@ export const Hint = ({
   sideOffset,
   alignOffset
 }: HintProps) => {
-  const isMobile = typeof window !== "undefined" && window.matchMedia("(max-width: 1024px)").matches;
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  if (!mounted) {
+    return <>{children}</>;
+  }
+
+  const isMobile = window.matchMedia("(max-width: 1024px)").matches;
 
   if (isMobile) {
     return <>{children}</>;

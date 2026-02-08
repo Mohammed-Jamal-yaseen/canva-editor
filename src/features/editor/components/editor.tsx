@@ -232,10 +232,10 @@ export const Editor = ({ initialData }: EditorProps) => {
                      <Button 
                          variant="secondary" 
                          size="icon" 
-                         className="size-10 rounded-full shadow-lg bg-white border"
+                         className="size-10 rounded-full shadow-lg bg-white dark:bg-slate-900 border dark:border-slate-800"
                          onClick={() => setPropertiesOpen(true)}
                      >
-                         <Settings2 className="size-5 text-slate-600" />
+                         <Settings2 className="size-5 text-slate-600 dark:text-slate-300" />
                      </Button>
                  </div>
              )}

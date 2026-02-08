@@ -38,7 +38,7 @@ export const Sidebar = ({
   toggleGridView,
 }: SidebarProps) => {
   return (
-    <aside className="bg-white/95 backdrop-blur-md flex flex-row w-full h-[72px] lg:flex-col lg:w-[84px] lg:h-full border-r lg:border-t-0 border-t border-gray-100 z-40 lg:shadow-sm shadow-[0_-5px_20px_rgba(0,0,0,0.05)] overflow-hidden lg:relative">
+    <aside className="bg-white/95 dark:bg-[#18191b]/95 backdrop-blur-md flex flex-row w-full h-[72px] lg:flex-col lg:w-[84px] lg:h-full border-r lg:border-t-0 border-t border-gray-100 dark:border-slate-800 z-40 lg:shadow-sm shadow-[0_-5px_20px_rgba(0,0,0,0.05)] overflow-hidden lg:relative">
       {/* Mobile Navigation */}
       <div className="flex-1 w-full h-full lg:hidden overflow-x-auto scrollbar-hide no-scrollbar snap-x snap-mandatory">
         <ul className="flex flex-row h-full items-center justify-around px-2 min-w-max md:min-w-full">
@@ -88,8 +88,8 @@ export const Sidebar = ({
                 <button 
                   onClick={() => onChangeActiveTool("ai")}
                   className={cn(
-                    "size-12 rounded-2xl bg-gradient-to-tr from-purple-600 via-indigo-600 to-blue-600 flex items-center justify-center text-white shadow-lg active:scale-95 transition-all",
-                    activeTool === "ai" && "ring-4 ring-purple-100"
+                    "size-12 rounded-2xl bg-gradient-to-tr from-purple-600 via-indigo-600 to-blue-600 flex items-center justify-center text-white shadow-lg active:scale-95 transition-all text-white",
+                    activeTool === "ai" && "ring-4 ring-purple-100 dark:ring-purple-900/40"
                   )}
                 >
                     <Sparkles className="size-6" />
@@ -181,7 +181,7 @@ export const Sidebar = ({
             isActive={activeTool === "hand"}
             onClick={() => onChangeActiveTool("hand")}
           />
-          <div className="mt-auto pt-2 border-t border-gray-100">
+          <div className="mt-auto pt-2 border-t border-gray-100 dark:border-slate-800">
             <SidebarItem
               icon={Settings}
               label="الإعدادات"

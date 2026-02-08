@@ -85,7 +85,7 @@ export const Navbar = ({
 
   if (!isMounted) {
     return (
-      <nav className="w-full flex items-center p-4 h-[68px] gap-x-8 border-b bg-white shadow-sm sticky top-0 z-[50]">
+      <nav className="w-full flex items-center px-4 h-[68px] gap-x-2 lg:gap-x-8 border-b dark:border-slate-800 bg-white dark:bg-slate-900 shadow-sm sticky top-0 z-[50]">
         <div className="flex items-center gap-x-4">
           <Logo />
           <div className="hidden lg:flex items-center gap-x-2 text-sm text-muted-foreground">
@@ -97,7 +97,7 @@ export const Navbar = ({
   }
 
   return (
-    <nav className="w-full flex items-center px-4 h-[68px] gap-x-2 lg:gap-x-8 border-b bg-white shadow-sm sticky top-0 z-[50]">
+    <nav className="w-full flex items-center px-4 h-[68px] gap-x-2 lg:gap-x-8 border-b dark:border-slate-800 bg-white dark:bg-slate-900 shadow-sm sticky top-0 z-[50]">
       <div className="flex items-center gap-x-2 lg:gap-x-4 shrink-0">
         <Logo />
         <div className="hidden lg:flex items-center gap-x-2 text-sm text-muted-foreground mr-auto">
@@ -111,7 +111,7 @@ export const Navbar = ({
               variant="outline" 
               onClick={() => editor?.onSave()}
               disabled={isPending}
-              className="h-8 gap-x-2 bg-slate-50 hover:bg-slate-100 border-none shadow-none text-blue-600 font-semibold"
+              className="h-8 gap-x-2 bg-slate-50 dark:bg-slate-800 hover:bg-slate-100 dark:hover:bg-slate-700 border-none shadow-none text-blue-600 dark:text-blue-400 font-semibold"
             >
               {isPending ? <Loader className="size-3 animate-spin" /> : <BsCloudCheck className="size-4" />}
               {isPending ? "جاري الحفظ..." : "حفظ"}
@@ -153,18 +153,18 @@ export const Navbar = ({
         <div className="hidden md:block">
             <DropdownMenu modal={false}>
             <DropdownMenuTrigger asChild>
-                <Button size="sm" variant="ghost" className="h-9 font-normal hover:bg-gray-100">
+                <Button size="sm" variant="ghost" className="h-9 font-normal hover:bg-gray-100 dark:hover:bg-slate-800">
                 File
                 <ChevronDown className="size-4 ml-2 opacity-50" />
                 </Button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent align="start" className="w-56 shadow-xl border-gray-100">
+            <DropdownMenuContent align="start" className="w-56 shadow-xl border-gray-100 dark:border-slate-800 bg-white dark:bg-slate-900">
                 <DropdownMenuItem
                 onClick={() => openFilePicker()}
                 className="flex items-center gap-x-3 py-3 cursor-pointer"
                 >
-                <div className="size-8 rounded-md bg-blue-50 flex items-center justify-center">
-                    <FileIcon className="size-4 text-blue-600" />
+                <div className="size-8 rounded-md bg-blue-50 dark:bg-blue-900/30 flex items-center justify-center">
+                    <FileIcon className="size-4 text-blue-600 dark:text-blue-400" />
                 </div>
                 <div className="flex flex-col">
                     <span className="font-semibold text-sm">Open</span>
@@ -177,7 +177,7 @@ export const Navbar = ({
 
         <Separator orientation="vertical" className="hidden md:block h-6 mx-1" />
 
-        <div className="flex items-center gap-x-1 bg-gray-50/50 p-1 rounded-lg border border-gray-100">
+        <div className="flex items-center gap-x-1 bg-gray-50/50 dark:bg-slate-800/30 p-1 rounded-lg border border-gray-100 dark:border-slate-800">
           <Hint label="التحريك" sideOffset={10}>
             <Button
               variant="ghost"
@@ -185,7 +185,7 @@ export const Navbar = ({
               onClick={() => onChangeActiveTool("select")}
               className={cn(
                 "h-9 w-9 transition-all rounded-md",
-                activeTool === "select" && "bg-white shadow-sm ring-1 ring-black/5 text-blue-600"
+                activeTool === "select" && "bg-white dark:bg-slate-900 shadow-sm ring-1 ring-black/5 dark:ring-white/10 text-blue-600 dark:text-blue-400"
               )}
             >
               <MousePointerClick className="size-[18px]" />
@@ -231,8 +231,8 @@ export const Navbar = ({
               <Download className="size-4 lg:ml-2" />
             </Button>
           </DropdownMenuTrigger>
-          <DropdownMenuContent align="end" className="w-72 p-2 shadow-2xl border-gray-100 rounded-xl overflow-hidden">
-            <div className="px-3 py-3 mb-2 bg-gray-50/50 rounded-lg">
+          <DropdownMenuContent align="end" className="w-72 p-2 shadow-2xl border-gray-100 dark:border-slate-800 bg-white dark:bg-slate-900 rounded-xl overflow-hidden">
+            <div className="px-3 py-3 mb-2 bg-gray-50/50 dark:bg-slate-800/50 rounded-lg">
                <p className="text-[11px] font-bold text-muted-foreground uppercase tracking-wider">Export your creation</p>
             </div>
             

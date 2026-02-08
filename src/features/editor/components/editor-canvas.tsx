@@ -47,7 +47,7 @@ export const EditorCanvas = ({
   return (
     <main className="bg-muted flex-1 overflow-hidden relative flex flex-col min-h-0 lg:pb-0">
       <div className={cn(
-          "flex-1 overflow-auto bg-[#EBECF0] transition-all duration-300 relative",
+          "flex-1 overflow-auto bg-[#EBECF0] dark:bg-[#0f0f10] transition-all duration-300 relative",
           isGridView ? "opacity-0 invisible h-0" : "flex flex-col items-center"
       )} ref={containerRef}>
         <div className="flex-1 flex items-center justify-center w-full py-8 lg:py-12">
@@ -60,7 +60,7 @@ export const EditorCanvas = ({
                 <Button 
                     variant="outline" 
                     onClick={() => setAddPageModalOpen(true)}
-                    className="h-10 px-6 border-2 border-dashed bg-white hover:bg-slate-50 transition-all rounded-lg text-slate-500 font-semibold gap-x-2 shadow-sm hover:shadow-md"
+                    className="h-10 px-6 border-2 border-dashed border-slate-300 dark:border-slate-800 bg-white dark:bg-slate-900/40 hover:bg-slate-50 dark:hover:bg-slate-800 transition-all rounded-lg text-slate-500 dark:text-slate-400 font-semibold gap-x-2 shadow-sm hover:shadow-md"
                 >
                     <Plus className="size-4" />
                     إضافة صفحة
@@ -119,7 +119,7 @@ export const EditorCanvas = ({
         )}>
             {/* Mobile Property Toolbar - Only if selection exists */}
             {editor?.selectedObjects && editor.selectedObjects.length > 0 && (
-                <div className="pointer-events-auto bg-white/95 backdrop-blur-md border-t shadow-[0_-5px_15px_rgba(0,0,0,0.05)] w-full overflow-hidden">
+                <div className="pointer-events-auto bg-white/95 dark:bg-[#18191b]/95 backdrop-blur-md border-t dark:border-slate-800 shadow-[0_-5px_15px_rgba(0,0,0,0.05)] w-full overflow-hidden">
                     <Toolbar
                         editor={editor}
                         activeTool={activeTool}

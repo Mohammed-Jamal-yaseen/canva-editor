@@ -67,10 +67,10 @@ export const Footer = ({
   };
 
   return (
-    <footer className="h-[40px] border-t bg-white w-full flex items-center justify-between z-[35] px-4 shrink-0 shadow-[0_-1px_3px_rgba(0,0,0,0.05)] select-none">
+    <footer className="h-[40px] border-t dark:border-slate-800 bg-white dark:bg-[#18191b] w-full flex items-center justify-between z-[35] px-4 shrink-0 shadow-[0_-1px_3px_rgba(0,0,0,0.05)] select-none">
       {/* Left: Notes & Feed */}
       <div className="flex items-center gap-x-1">
-        <Button variant="ghost" size="sm" className="h-8 gap-x-2 text-[11px] font-bold px-3 hover:bg-slate-100 rounded-lg text-slate-600">
+        <Button variant="ghost" size="sm" className="h-8 gap-x-2 text-[11px] font-bold px-3 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg text-slate-600 dark:text-slate-400">
             <MessageSquare className="size-4" />
             <span>ملاحظات</span>
         </Button>
@@ -84,7 +84,7 @@ export const Footer = ({
                 <Button 
                     variant="ghost" 
                     size="icon" 
-                    className="h-8 w-8 text-slate-500 hover:bg-slate-100" 
+                    className="h-8 w-8 text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800" 
                     disabled={editor?.currentPage === 0}
                     onClick={() => editor?.prevPage()}
                 >
@@ -93,7 +93,7 @@ export const Footer = ({
             </Hint>
             
             <div className="px-2 min-w-[60px] text-center">
-                <span className="text-[11px] font-black text-slate-700 tabular-nums">
+                <span className="text-[11px] font-black text-slate-700 dark:text-slate-300 tabular-nums">
                     {(editor?.currentPage || 0) + 1} / {editor?.totalPages || 1}
                 </span>
             </div>
@@ -102,7 +102,7 @@ export const Footer = ({
                 <Button 
                     variant="ghost" 
                     size="icon" 
-                    className="h-8 w-8 text-slate-500 hover:bg-slate-100" 
+                    className="h-8 w-8 text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800" 
                     disabled={(editor?.currentPage || 0) >= (editor?.totalPages || 1) - 1}
                     onClick={() => editor?.nextPage()}
                 >
@@ -111,7 +111,7 @@ export const Footer = ({
             </Hint>
         </div>
 
-        <Separator orientation="vertical" className="h-4 mx-1" />
+        <Separator orientation="vertical" className="h-4 mx-1 dark:bg-slate-800" />
 
         {/* Grid View Toggle */}
         <Hint label="عرض الشبكة" side="top">
@@ -121,14 +121,14 @@ export const Footer = ({
                 onClick={toggleGridView}
                 className={cn(
                     "h-8 w-8 transition-all rounded-lg",
-                    isGridView ? "text-purple-600 bg-purple-50 shadow-inner" : "text-slate-500 hover:bg-slate-100"
+                    isGridView ? "text-purple-600 bg-purple-50 dark:bg-purple-950/20 shadow-inner" : "text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800"
                 )}
             >
                 <LayoutGrid className="size-4" />
             </Button>
         </Hint>
 
-        <Separator orientation="vertical" className="h-4 mx-1" />
+        <Separator orientation="vertical" className="h-4 mx-1 dark:bg-slate-800" />
 
         {/* Zoom Controls */}
         <div className="flex items-center gap-x-2">
@@ -158,7 +158,7 @@ export const Footer = ({
                 <Button 
                     variant="ghost" 
                     size="icon" 
-                    className="h-8 w-8 text-slate-500 hover:bg-slate-100"
+                    className="h-8 w-8 text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800"
                     onClick={() => editor?.zoomIn()}
                 >
                     <Plus className="size-3" />
@@ -171,12 +171,12 @@ export const Footer = ({
                     value={`${zoomPercent}%`}
                     onChange={handleZoomInput}
                     onBlur={handleZoomBlur}
-                    className="w-[45px] h-7 text-[11px] font-bold text-center bg-slate-50 border-none outline-none hover:bg-slate-100 focus:bg-white focus:ring-1 focus:ring-purple-200 rounded-md transition-all cursor-pointer"
+                    className="w-[45px] h-7 text-[11px] font-bold text-center bg-slate-50 dark:bg-slate-900 border-none outline-none hover:bg-slate-100 dark:hover:bg-slate-800 focus:bg-white dark:focus:bg-[#18191b] focus:ring-1 focus:ring-purple-200 dark:focus:ring-purple-900 rounded-md transition-all cursor-pointer text-slate-700 dark:text-slate-200"
                 />
             </form>
         </div>
 
-        <Separator orientation="vertical" className="h-4 mx-1" />
+        <Separator orientation="vertical" className="h-4 mx-1 dark:bg-slate-800" />
 
         {/* Full Screen */}
         <Hint label="ملء الشاشة" side="top">
@@ -190,7 +190,7 @@ export const Footer = ({
                         document.documentElement.requestFullscreen();
                     }
                 }}
-                className="h-8 w-8 text-slate-500 hover:bg-slate-100 rounded-lg"
+                className="h-8 w-8 text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg"
             >
                 <Maximize2 className="size-4" />
             </Button>

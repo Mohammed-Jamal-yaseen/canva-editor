@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { 
   ActiveTool, 
   Editor, 
@@ -32,6 +32,12 @@ export const DrawSidebar = ({
   activeTool,
   onChangeActiveTool,
 }: DrawSidebarProps) => {
+  const [isMounted, setIsMounted] = useState(false);
+
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
+
   const isMobile = useMedia("(max-width: 1024px)", false);
 
   const colorValue = editor?.getActiveStrokeColor() || STROKE_COLOR;
@@ -50,6 +56,8 @@ export const DrawSidebar = ({
   };
 
   const [isCollapsed, setIsCollapsed] = useState(false);
+
+  if (!isMounted) return null;
 
   // Mobile Drawing Controls - Non-modal
   if (isMobile) {

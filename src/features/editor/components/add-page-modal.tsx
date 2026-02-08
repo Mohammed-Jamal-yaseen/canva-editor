@@ -1,3 +1,4 @@
+import { useState, useEffect } from "react";
 import { 
   Dialog,
   DialogContent,
@@ -36,6 +37,12 @@ export const AddPageModal = ({
   open,
   setOpen,
 }: AddPageModalProps) => {
+  const [isMounted, setIsMounted] = useState(false);
+
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
+
   const isMobile = useMedia("(max-width: 1024px)", false);
 
   const onSelect = (width: number, height: number) => {
@@ -56,6 +63,7 @@ export const AddPageModal = ({
     SocialMedia: Share2,
     Video: Video,
     Websites: Globe,
+    More: MoreHorizontal,
   };
 
   const content = (
@@ -90,6 +98,8 @@ export const AddPageModal = ({
       </button>
     </div>
   );
+
+  if (!isMounted) return null;
 
   if (isMobile) {
     return (

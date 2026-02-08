@@ -30,6 +30,12 @@ interface PropertiesSidebarProps {
 }
 
 export const PropertiesSidebar = ({ editor, open, onOpenChange }: PropertiesSidebarProps) => {
+  const [isMounted, setIsMounted] = useState(false);
+
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
+
   const isMobile = useMedia("(max-width: 1024px)", false);
   const selectedObject = editor?.selectedObjects?.[0];
 
@@ -111,8 +117,8 @@ export const PropertiesSidebar = ({ editor, open, onOpenChange }: PropertiesSide
   const content = (
       <div className="space-y-4">
           {!isMobile && (
-              <div className="flex items-center justify-between pb-2 border-b">
-                 <p className="text-sm font-bold text-slate-800">الخصائص</p>
+              <div className="flex items-center justify-between pb-2 border-b dark:border-slate-800">
+                 <p className="text-sm font-bold text-slate-800 dark:text-slate-200">الخصائص</p>
                  <Button variant="ghost" size="icon" className="size-6" onClick={() => onOpenChange(false)}>
                      <X className="size-4" />
                  </Button>
@@ -155,7 +161,7 @@ export const PropertiesSidebar = ({ editor, open, onOpenChange }: PropertiesSide
           </div>
     
           {/* Transform */}
-          <div className="space-y-3 pt-2 border-t">
+          <div className="space-y-3 pt-2 border-t dark:border-slate-800">
               <p className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wider">الموقع والحجم</p>
               <div className="grid grid-cols-2 gap-x-2 gap-y-3">
                  <div className="space-y-0.5 relative">
@@ -230,7 +236,7 @@ export const PropertiesSidebar = ({ editor, open, onOpenChange }: PropertiesSide
           </div>
     
            {/* Appearance */}
-           <div className="space-y-3 pt-2 border-t">
+           <div className="space-y-3 pt-2 border-t dark:border-slate-800">
               <p className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wider">الشفافية (Opacity)</p>
               <div className="space-y-3">
                   <div className="space-y-1">
@@ -248,7 +254,7 @@ export const PropertiesSidebar = ({ editor, open, onOpenChange }: PropertiesSide
               </div>
            </div>
     
-            <div className="pt-2 border-t mt-auto">
+            <div className="pt-2 border-t dark:border-slate-800 mt-auto">
                  <Button variant="ghost" className="w-full text-xs text-red-500 hover:text-red-600 hover:bg-red-50 gap-2 h-8" onClick={() => editor.delete()}>
                      <Trash2 className="size-3.5" /> حذف العنصر
                  </Button>
@@ -256,10 +262,12 @@ export const PropertiesSidebar = ({ editor, open, onOpenChange }: PropertiesSide
       </div>
   );
 
+  if (!isMounted) return null;
+
   if (isMobile) {
       return (
         <Drawer open={open} onOpenChange={onOpenChange}>
-            <DrawerContent className="p-4 pt-1 max-h-[85vh] overflow-y-auto">
+            <DrawerContent className="p-4 pt-1 max-h-[85vh] overflow-y-auto bg-white dark:bg-[#18191b] dark:border-slate-800">
                 <DrawerHeader className="text-right p-0 pb-4">
                     <DrawerTitle>الخصائص</DrawerTitle>
                 </DrawerHeader>
@@ -272,7 +280,7 @@ export const PropertiesSidebar = ({ editor, open, onOpenChange }: PropertiesSide
   if (!open) return null;
 
   return (
-    <div className="flex flex-col p-4 space-y-4 bg-white h-full w-[240px] shadow-sm border-l overflow-y-auto flex relative">
+    <div className="flex flex-col p-4 space-y-4 bg-white dark:bg-[#18191b] h-full w-[240px] shadow-sm border-l dark:border-slate-800 overflow-y-auto flex relative">
       {content}
     </div>
   );
