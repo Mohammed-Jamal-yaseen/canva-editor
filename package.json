@@ -71,7 +71,6 @@
     "@types/react-dom": "^19",
     "@types/uuid": "^11.0.0",
     "@types/ws": "^8.18.1",
-    "add": "^2.0.6",
     "eslint": "^9",
     "eslint-config-next": "16.1.6",
     "pnpm": "^10.28.2",
